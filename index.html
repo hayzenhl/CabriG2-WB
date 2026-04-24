@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="G2 WandB">
+<title>Cabri G2 - Weight and Balance</title>
+<style>
+:root{--navy:#1a2e4a;--blue:#1a7fe8;--blue-bg:#e8f2fd;--green:#007a38;--green-bg:#e6f4ec;--red:#c0392b;--red-bg:#fdf0ef;--border:#d1d5db;--border-light:#e5e7eb;--text:#111827;--text-mid:#374151;--text-muted:#6b7280;--bg:#f3f4f6;--surface:#ffffff;}
+@media(prefers-color-scheme:dark){:root{--navy:#0d1b2e;--blue:#60a5fa;--blue-bg:#1e3a5f;--green:#34d06e;--green-bg:#052e16;--red:#f87171;--red-bg:#450a0a;--border:#374151;--border-light:#1f2937;--text:#f9fafb;--text-mid:#d1d5db;--text-muted:#6b7280;--bg:#111827;--surface:#1f2937;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+.hdr{background:var(--navy);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
+.hdr h1{font-size:17px;font-weight:700;color:#fff;line-height:1.2}
+.hdr-sub{font-size:10px;color:rgba(255,255,255,.55);margin-top:2px}
+.btn-row{display:flex;gap:6px;flex-shrink:0}
+.hbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.hbtn:active{background:rgba(255,255,255,.3)}
+.meta{display:flex;gap:8px;flex-wrap:wrap}
+.mf{display:flex;flex-direction:column;gap:2px}
+.mf label{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em}
+.mf input{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12px;padding:5px 8px;border-radius:6px;font-family:inherit;outline:none;width:100px}
+.mf input::placeholder{color:rgba(255,255,255,.3)}
+.mf input:focus{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
+.main{padding:12px;max-width:980px;margin:0 auto}
+.sec{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 8px;padding-left:2px}
+.cards{display:flex;flex-direction:column;gap:0}
+.grp-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;padding:10px 4px 4px;border-bottom:1px solid var(--border-light);margin-bottom:6px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin-bottom:8px}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.card-info{flex:1;min-width:0}
+.card-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.card-note{font-size:10px;color:var(--text-muted);margin-top:2px}
+.card-arms{font-size:10px;color:var(--text-muted);margin-top:3px}
+.card-inputs{display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+.inp-grp{display:flex;flex-direction:column;align-items:center;gap:2px}
+.inp-lbl{font-size:9px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.inp{width:76px;border:1.5px solid var(--border);border-radius:8px;background:var(--blue-bg);color:var(--blue);font-size:15px;font-weight:700;text-align:center;padding:8px 4px;font-family:inherit;outline:none;-moz-appearance:textfield;transition:border-color .15s,box-shadow .15s}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,127,232,.2)}
+.inp::placeholder{color:#93c5fd;font-weight:400;font-size:11px}
+.inp::-webkit-outer-spin-button,.inp::-webkit-inner-spin-button{-webkit-appearance:none}
+.card-moms{display:flex;gap:12px;font-size:10px;color:var(--text-muted);border-top:1px solid var(--border-light);padding-top:7px}
+.mom-item{display:flex;flex-direction:column;gap:1px}
+.mom-lbl{font-size:9px;color:var(--text-muted)}
+.mom-val{font-weight:600;color:var(--text-mid);font-size:11px}
+.tot-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-top:10px;overflow:hidden}
+.tot-row{display:flex;align-items:center;padding:10px 12px;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border-light)}
+.tot-row:last-child{border-bottom:none}
+.tot-zf{background:var(--blue-bg)}
+.tot-to{background:var(--green-bg)}
+.tot-label{font-size:11px;font-weight:700;min-width:80px;flex-shrink:0}
+.tot-zf .tot-label{color:var(--blue)}
+.tot-to .tot-label{color:var(--green)}
+.tot-item{display:flex;flex-direction:column;gap:1px;min-width:78px}
+.tot-item-lbl{font-size:9px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.tot-item-val{font-size:13px;font-weight:700}
+.tot-zf .tot-item-val{color:var(--blue)}
+.tot-to .tot-item-val{color:var(--green)}
+.lbar{border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;font-weight:700;border:1.5px solid;line-height:1.5}
+.lbar-items{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.lbar-item{font-size:11px;font-weight:500}
+.lok{background:var(--green-bg);color:var(--green);border-color:#6ee7b7}
+.lwn{background:var(--red-bg);color:var(--red);border-color:#fca5a5}
+.lnt{background:var(--surface);color:var(--text-muted);border-color:var(--border)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.sl{font-size:10px;color:var(--text-muted);font-weight:600;margin-bottom:4px}
+.sv{font-size:20px;font-weight:700;color:var(--text);line-height:1}
+.sv small{font-size:12px;font-weight:400;color:var(--text-muted)}
+.ss{font-size:10px;margin-top:4px;font-weight:600}
+.sok{color:var(--green)}.swn{color:var(--red)}.snt{color:var(--text-muted)}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media(max-width:600px){.cgrid{grid-template-columns:1fr}}
+.ccard{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.chdr{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid var(--border-light)}
+.ctitle{font-size:11px;font-weight:700;color:var(--text)}
+.cst{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.cok{background:var(--green-bg);color:var(--green)}.cwn{background:var(--red-bg);color:var(--red)}.cnt{background:var(--border-light);color:var(--text-muted)}
+canvas{display:block;width:100%!important}
+.cleg{display:flex;gap:12px;padding:6px 12px;font-size:10px;color:var(--text-muted)}
+.ld{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+.ldsq{border-radius:1px}
+.cbtn{display:block;width:100%;margin:12px 0 0;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:12px;padding:10px;border-radius:8px;cursor:pointer;font-family:inherit;text-align:center}
+.cbtn:active{background:var(--border-light)}
+.foot{text-align:center;font-size:10px;color:var(--text-muted);padding:16px;border-top:1px solid var(--border-light);margin-top:16px;line-height:1.8}
+.foot strong{color:var(--red)}
+@media print{body{background:#fff;color:#000}.hdr{position:static;background:#1a2e4a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.hbtn,.cbtn{display:none}.cgrid{grid-template-columns:1fr 1fr}@page{margin:1.2cm;size:A4 portrait}}
+
+
+
+.neg-btn:active{background:var(--blue-bg);color:var(--blue);border-color:var(--blue)}
+
+
+.lbar-section{margin-top:8px;padding-top:6px;border-top:1px solid rgba(0,0,0,0.1)}
+.lbar-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;opacity:.7;margin-bottom:3px}
+
+/* Custom keypad */
+.kp-overlay{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.3);display:none;align-items:flex-end;justify-content:center}
+.kp-overlay.open{display:flex}
+.kp{background:var(--surface);border-radius:16px 16px 0 0;padding:12px 12px 32px;width:100%;max-width:420px;box-shadow:0 -4px 24px rgba(0,0,0,0.2)}
+.kp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.kp-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.kp-display{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-size:22px;font-weight:700;color:var(--blue);text-align:right;min-height:44px;letter-spacing:.02em;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.kp-display.neg{color:var(--red)}
+.kp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kp-btn{height:56px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:22px;font-weight:500;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background .08s}
+.kp-btn:active{background:var(--border)}
+.kp-btn.kp-zero{grid-column:span 1}
+.kp-btn.kp-action{background:var(--navy);color:#fff;border-color:var(--navy);font-size:16px;font-weight:700}
+.kp-btn.kp-action:active{background:var(--blue)}
+.kp-btn.kp-neg{background:var(--blue-bg);color:var(--blue);border-color:var(--blue);font-size:20px;font-weight:700}
+.kp-btn.kp-neg:active{background:var(--blue);color:#fff}
+.kp-btn.kp-del{background:var(--red-bg);color:var(--red);border-color:var(--red);font-size:20px}
+.kp-btn.kp-del:active{background:var(--red);color:#fff}
+.kp-btn.kp-done{background:var(--green);color:#fff;border-color:var(--green);font-size:16px;font-weight:800;height:56px}
+.kp-btn.kp-done:active{opacity:.85}
+.kp-done-row{margin-top:8px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a2e4a;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:20px;transition:transform .3s ease;z-index:9999;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(pointer:fine){
+  .inp{background:var(--surface);color:var(--text);border-color:var(--border);cursor:text}
+  .inp:focus{background:var(--blue-bg);color:var(--blue);border-color:var(--blue)}
+  .kp-overlay{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-row">
+    <div><h1>Cabri G2 - Weight and Balance</h1><div class="hdr-sub">POH Issue 10.1 - Imperial Units - For reference only</div></div>
+    <div class="btn-row">
+      <button class="hbtn" id="sharebtn" onclick="doShare()">&#8679; Share</button>
+      <button class="hbtn" onclick="doPrint()">Print/PDF</button>
+    </div>
+  </div>
+  <div class="meta">
+    <div class="mf"><label>Tail #</label><input id="tail" placeholder="N______" maxlength="8"></div>
+    <div class="mf"><label>Date</label><input id="dt" placeholder="__/__/__" maxlength="10" style="width:82px"></div>
+    <div class="mf"><label>Pilot</label><input id="pic" placeholder="Name" style="width:120px"></div>
+  </div>
+</div>
+<div class="main">
+  <div class="sec">Weight &amp; Balance — enter values in blue boxes below</div>
+  <div class="cards">
+    <div class="grp-label">Aircraft</div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Empty Weight</div><div class="card-note">From aircraft W&amp;B report</div><div class="card-arms">Long. &amp; Lat. Arms: from W&amp;B report</div></div>
+        <div class="card-inputs">
+          <div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w0" type="text" placeholder="-" inputmode="decimal"></div>
+          <div class="inp-grp"><div class="inp-lbl">Long. Arm</div><input class="inp" id="xa0" type="text" placeholder="-" inputmode="decimal" style="width:64px;font-size:13px"></div>
+          <div class="inp-grp"><div class="inp-lbl">Lat. Arm</div><input class="inp" id="ya0" type="text" placeholder="-" inputmode="decimal" style="width:64px;font-size:13px"></div>
+        </div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm0">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym0">-</div></div></div>
+    </div>
+    <div class="grp-label">Occupants</div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Pilot (right seat)</div><div class="card-arms">Long. Arm: 51.2 in | Lat. Arm: +12.6 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w1" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm1">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym1">-</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Passenger (left seat)</div><div class="card-arms">Long. Arm: 51.2 in | Lat. Arm: -11.0 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w2" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm2">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym2">-</div></div></div>
+    </div>
+    <div class="grp-label">Doors</div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Right door</div><div class="card-note">Enter -6.8 lb if removed</div><div class="card-arms">Long. Arm: 49.2 in | Lat. Arm: +23.6 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w3" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm3">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym3">-</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Left door</div><div class="card-note">Enter -6.8 lb if removed</div><div class="card-arms">Long. Arm: 49.2 in | Lat. Arm: -23.6 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w4" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm4">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym4">-</div></div></div>
+    </div>
+    <div class="grp-label">Baggage</div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Main luggage compartment</div><div class="card-arms">Long. Arm: 73.0 in | Lat. Arm: +12.7 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w5" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm5">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym5">-</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Front luggage compartment</div><div class="card-arms">Long. Arm: 12.8 in | Lat. Arm: 0.0 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w6" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm6">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym6">-</div></div></div>
+    </div>
+    <div class="grp-label">Fuel</div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Fuel 0-13 gal</div><div class="card-note">Weight = gallons x 6 lb/gal</div><div class="card-arms">Long. Arm: 72.2 in | Lat. Arm: -12.3 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w7" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm7">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym7">-</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Fuel 13.5-40 gal</div><div class="card-note">Weight = gallons x 6 lb/gal</div><div class="card-arms">Long. Arm: 74.2 in | Lat. Arm: -13.3 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w8" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm8">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym8">-</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-info"><div class="card-name">Fuel 40.5-45 gal</div><div class="card-note">Weight = gallons x 6 lb/gal</div><div class="card-arms">Long. Arm: 74.9 in | Lat. Arm: -13.5 in</div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w9" type="text" placeholder="-" inputmode="decimal"></div></div>
+      </div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm9">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym9">-</div></div></div>
+    </div>
+  </div>
+  <button class="cbtn" onclick="clearAll()">Clear all weights</button>
+  <div class="tot-block" id="totblock" style="display:none">
+    <div class="tot-row tot-zf"><div class="tot-label">Zero Fuel</div><div class="tot-item"><div class="tot-item-lbl">Weight</div><div class="tot-item-val" id="t-zw">-</div></div><div class="tot-item"><div class="tot-item-lbl">Long. C.G.</div><div class="tot-item-val" id="t-zx">-</div></div><div class="tot-item"><div class="tot-item-lbl">Lat. C.G.</div><div class="tot-item-val" id="t-zy">-</div></div></div>
+    <div class="tot-row tot-to"><div class="tot-label">Takeoff</div><div class="tot-item"><div class="tot-item-lbl">Weight</div><div class="tot-item-val" id="t-tw">-</div></div><div class="tot-item"><div class="tot-item-lbl">Long. C.G.</div><div class="tot-item-val" id="t-tx">-</div></div><div class="tot-item"><div class="tot-item-lbl">Lat. C.G.</div><div class="tot-item-val" id="t-ty">-</div></div></div>
+  </div>
+  <div class="lbar lnt" id="lbar">Enter weights above to calculate C.G.</div>
+  <div class="sgrid" id="sgrid" style="display:none">
+    <div class="sc"><div class="sl">Takeoff weight</div><div class="sv" id="sv-tw">- <small>lb</small></div><div class="ss snt" id="ss-tw"></div></div>
+    <div class="sc"><div class="sl">Zero fuel weight</div><div class="sv" id="sv-zw">- <small>lb</small></div><div class="ss snt" id="ss-zw"></div></div>
+    <div class="sc"><div class="sl">Long. C.G. (Takeoff)</div><div class="sv" id="sv-lx">- <small>in</small></div><div class="ss snt" id="ss-lx"></div></div>
+    <div class="sc"><div class="sl">Lat. C.G. (Takeoff)</div><div class="sv" id="sv-ly">- <small>in</small></div><div class="ss snt" id="ss-ly"></div></div>
+  </div>
+  <div class="sec" style="margin-top:16px">C.G. Envelopes - POH Section 2</div>
+  <div class="cgrid">
+    <div class="ccard"><div class="chdr"><span class="ctitle">Longitudinal C.G. Envelope</span><span class="cst cnt" id="lst">-</span></div><canvas id="lc" height="220"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div>
+    <div class="ccard"><div class="chdr"><span class="ctitle">Lateral C.G. Envelope</span><span class="cst cnt" id="rst">-</span></div><canvas id="rc" height="220"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div>
+  </div>
+  <div class="foot">Moment = Weight x Arm &nbsp;|&nbsp; CG = Total Moment / Total Weight<br>Limits: Max 1,543 lb &nbsp;|&nbsp; Xcg 75.4-83.5 in &nbsp;|&nbsp; Lat. C.G. +/-3.1 in &nbsp;|&nbsp; Door removal -6.8 lb each<br><strong>For reference only - verify with current POH and aircraft W&amp;B report</strong></div>
+</div>
+<script>
+const XCG=[null,51.2,51.2,49.2,49.2,73.0,12.8,72.2,74.2,74.9];
+const YCG=[null,12.6,-11.0,23.6,-23.6,12.7,0.0,-12.3,-13.3,-13.5];
+const FUEL=[7,8,9];
+const ENV=[[83.5,1036],[83.5,1102],[79.7,1543],[75.4,1543],[75.4,1213]];
+const ST={to_x:null,to_w:null,zf_x:null,zf_w:null,to_y:null,zf_y:null};
+function g(id){return document.getElementById(id);}
+function gv(id){var e=g(id);if(!e||e.value.trim()===''||e.value.trim()==='-')return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+function fmt(v,d){return v!==null?v.toFixed(d):'-';}
+function recalc(){
+  var tw=0,tlm=0,tym=0,zw=0,zlm=0,zym=0,any=false;
+  for(var i=0;i<10;i++){
+    var w=gv('w'+i);
+    if(w===null){g('lm'+i).textContent='-';g('ym'+i).textContent='-';continue;}
+    any=true;
+    var xa=i===0?(gv('xa0')||0):XCG[i];
+    var ya=i===0?(gv('ya0')||0):YCG[i];
+    var lmv=w*xa,ymv=w*ya;
+    tw+=w;tlm+=lmv;tym+=ymv;
+    if(FUEL.indexOf(i)<0){zw+=w;zlm+=lmv;zym+=ymv;}
+    g('lm'+i).textContent=lmv.toFixed(1);
+    g('ym'+i).textContent=ymv.toFixed(1);
+  }
+  var to_x=tw?tlm/tw:null,to_y=tw?tym/tw:null;
+  var zf_x=zw?zlm/zw:null,zf_y=zw?zym/zw:null;
+  ST.to_x=to_x;ST.to_w=tw||null;ST.zf_x=zf_x;ST.zf_w=zw||null;ST.to_y=to_y;ST.zf_y=zf_y;
+  if(!any){
+    g('totblock').style.display='none';g('sgrid').style.display='none';
+    g('lbar').className='lbar lnt';g('lbar').textContent='Enter weights above to calculate C.G.';
+    setSt('lst','-','cnt');setSt('rst','-','cnt');redraw();return;
+  }
+  g('totblock').style.display='';
+  g('t-zw').textContent=fmt(zw,1)+' lb';g('t-zx').textContent=fmt(zf_x,3)+' in';g('t-zy').textContent=fmt(zf_y,3)+' in';
+  g('t-tw').textContent=fmt(tw,1)+' lb';g('t-tx').textContent=fmt(to_x,3)+' in';g('t-ty').textContent=fmt(to_y,3)+' in';
+  var wOk=tw<=1543,inP=to_x!==null&&inPoly(to_x,tw),yOk=to_y!==null&&to_y>=-3.1&&to_y<=3.1;
+  var zfWok=zw<=1543,zfInP=zf_x!==null&&inPoly(zf_x,zw),zfYok=zf_y!==null&&zf_y>=-3.1&&zf_y<=3.1;
+  var all=wOk&&inP&&yOk,allZf=zfWok&&zfInP&&zfYok;
+  var lstOk=inP&&zfInP, rstOk=yOk&&zfYok;
+  var lstTxt=to_x!==null?(lstOk?'IN LIMITS':'OUT OF LIMITS'):'-';
+  var rstTxt=to_y!==null?(rstOk?'IN LIMITS':'OUT OF LIMITS'):'-';
+  setSt('lst',lstTxt,lstOk?'cok':'cwn');
+  setSt('rst',rstTxt,rstOk?'cok':'cwn');
+  var lb=g('lbar');lb.className='lbar '+(all&&allZf?'lok':'lwn');
+  lb.innerHTML='<strong>'+(all&&allZf?'All limits satisfied':'Limit(s) exceeded')+'</strong>'+
+    '<div class=lbar-section><div class=lbar-section-title>Takeoff</div>'+
+    '<div class=lbar-item>Weight: '+fmt(tw,1)+' lb &nbsp;'+(wOk?'&#10003;':'&#10007; exceeds 1,543 lb')+'</div>'+
+    '<div class=lbar-item>Long. C.G.: '+fmt(to_x,3)+' in &nbsp;'+(inP?'&#10003;':'&#10007; outside envelope')+'</div>'+
+    '<div class=lbar-item>Lat. C.G.: '+fmt(to_y,3)+' in &nbsp;'+(yOk?'&#10003;':'&#10007; outside +/-3.1 in')+'</div></div>'+
+    '<div class=lbar-section><div class=lbar-section-title>Zero Fuel</div>'+
+    '<div class=lbar-item>Weight: '+fmt(zw,1)+' lb &nbsp;'+(zfWok?'&#10003;':'&#10007; exceeds 1,543 lb')+'</div>'+
+    '<div class=lbar-item>Long. C.G.: '+fmt(zf_x,3)+' in &nbsp;'+(zfInP?'&#10003;':'&#10007; outside envelope')+'</div>'+
+    '<div class=lbar-item>Lat. C.G.: '+fmt(zf_y,3)+' in &nbsp;'+(zfYok?'&#10003;':'&#10007; outside +/-3.1 in')+'</div></div>';
+  g('sgrid').style.display='';
+  sCard('sv-tw','ss-tw',fmt(tw,1),'lb','Limit: 1,543 lb',wOk?'ok':'wn',wOk?'OK':'EXCEEDS');
+  sCard('sv-zw','ss-zw',fmt(zw,1),'lb','Fuel: '+fmt(tw-zw,1)+' lb',null,null);
+  sCard('sv-lx','ss-lx',fmt(to_x,3),'in','Long. C.G.: 75.4-83.5 in',inP?'ok':'wn',inP?'OK':'OUT');
+  sCard('sv-ly','ss-ly',fmt(to_y,3),'in','Lat. C.G.: +/-3.1 in',yOk?'ok':'wn',yOk?'OK':'OUT');
+  redraw();
+}
+function setSt(id,t,c){var e=g(id);e.textContent=t;e.className='cst '+c;}
+function sCard(v,s,val,unit,hint,type,status){
+  g(v).innerHTML=val+' <small>'+unit+'</small>';
+  var se=g(s);se.innerHTML=hint+(type&&status?' - '+status:'');se.className='ss '+(type?'s'+type:'snt');
+}
+function inPoly(xcg,wt){
+  var sign=null;
+  for(var i=0;i<ENV.length;i++){
+    var a=ENV[i],b=ENV[(i+1)%ENV.length];
+    var c=(b[0]-a[0])*(wt-a[1])-(b[1]-a[1])*(xcg-a[0]);
+    if(c===0)continue;var s=c>0;if(sign===null)sign=s;else if(s!==sign)return false;
+  }
+  return true;
+}
+function clearAll(){for(var i=0;i<10;i++){var w=g('w'+i);if(w)w.value='';}var xa=g('xa0');if(xa)xa.value='';var ya=g('ya0');if(ya)ya.value='';recalc();}
+
+function doPrint(){
+  // Try multiple print methods for cross-browser compatibility
+  try {
+    if(window.print){
+      window.print();
+      return;
+    }
+  } catch(e){}
+  try {
+    if(document.execCommand){
+      document.execCommand('print',false,null);
+      return;
+    }
+  } catch(e){}
+  // Fallback: instruct user
+  alert('To print or save as PDF:\n\nWindows: Press Ctrl + P\nMac: Press Cmd + P\n\nChoose "Save as PDF" as the destination.');
+}
+
+function doShare(){
+  if(navigator.share){
+    navigator.share({
+      title:'Cabri G2 Weight and Balance',
+      text:'Cabri G2 W&B calculator',
+      url:window.location.href
+    }).catch(function(){copyLink();});
+  } else {
+    copyLink();
+  }
+}
+
+function copyLink(){
+  var url=window.location.href;
+  if(url.startsWith('file://')){
+    // Local file — can't share a file:// URL meaningfully
+    alert('To share this app:\n\n1. Upload CabriG2_WB.html to GitHub Pages (see instructions)\n2. Then share the https:// link\n\nOr email the HTML file directly to another pilot.');
+    return;
+  }
+  // Try clipboard
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      showToast('Link copied to clipboard!');
+    }).catch(function(){
+      prompt('Copy this link:',url);
+    });
+  } else {
+    prompt('Copy this link:',url);
+  }
+}
+
+
+function mv(v,d0,d1,p0,p1){return p0+(v-d0)/(d1-d0)*(p1-p0);}
+function dk(){return window.matchMedia('(prefers-color-scheme:dark)').matches;}
+function drawLong(to_x,to_w,zf_x,zf_w){
+  var cv=g('lc'),dpr=Math.min(window.devicePixelRatio||1,3);
+  var W=cv.parentElement.clientWidth||320,H=220;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  var ml=46,mr=12,mt=14,mb=34,pw=W-ml-mr,ph=H-mt-mb;
+  var X0=75,X1=85,Y0=1000,Y1=1600;
+  function px(x){return ml+mv(x,X0,X1,0,pw);}function py(y){return mt+mv(y,Y1,Y0,0,ph);}
+  ctx.clearRect(0,0,W,H);
+  var d=dk(),gc=d?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)',ac=d?'rgba(255,255,255,.3)':'rgba(0,0,0,.3)',tc=d?'rgba(255,255,255,.55)':'rgba(0,0,0,.55)',es=d?'#60a5fa':'#1a4a8c';
+  ctx.strokeStyle=gc;ctx.lineWidth=0.5;
+  [75,77,79,81,83,85].forEach(function(x){ctx.beginPath();ctx.moveTo(px(x),mt);ctx.lineTo(px(x),mt+ph);ctx.stroke();});
+  [1000,1100,1200,1300,1400,1500,1600].forEach(function(y){ctx.beginPath();ctx.moveTo(ml,py(y));ctx.lineTo(ml+pw,py(y));ctx.stroke();});
+  ctx.beginPath();ENV.forEach(function(p,i){if(i===0)ctx.moveTo(px(p[0]),py(p[1]));else ctx.lineTo(px(p[0]),py(p[1]));});
+  ctx.closePath();ctx.fillStyle=d?'rgba(96,165,250,.14)':'rgba(26,74,140,.09)';ctx.fill();
+  ctx.strokeStyle=es;ctx.lineWidth=1.8;ctx.stroke();
+  var ptl=[{x:83.5,y:1036,l:'P1',dx:4,dy:-5},{x:83.5,y:1102,l:'P2',dx:4,dy:-5},{x:79.7,y:1543,l:'P3',dx:4,dy:11},{x:75.4,y:1543,l:'P4',dx:-20,dy:11},{x:75.4,y:1213,l:'P5',dx:4,dy:-5}];
+  ctx.fillStyle=es;ctx.font='8px -apple-system,sans-serif';
+  ptl.forEach(function(p){ctx.beginPath();ctx.arc(px(p.x),py(p.y),2.5,0,Math.PI*2);ctx.fill();ctx.fillText(p.l,px(p.x)+p.dx,py(p.y)+p.dy);});
+  ctx.strokeStyle=ac;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  ctx.fillStyle=tc;ctx.font='9px -apple-system,sans-serif';ctx.textAlign='center';
+  [75,77,79,81,83,85].forEach(function(x){ctx.fillText(x,px(x),mt+ph+12);});
+  ctx.fillText('Xcg (in.)',px(80),mt+ph+25);ctx.textAlign='right';
+  [1000,1200,1400,1600].forEach(function(y){ctx.fillText(y,ml-5,py(y)+3);});
+  ctx.save();ctx.translate(13,mt+ph/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('Weight (lb)',0,0);ctx.restore();
+  ctx.fillStyle=tc;ctx.font='8px -apple-system,sans-serif';ctx.textAlign='left';ctx.fillText('Fore',ml+4,mt+ph-4);ctx.textAlign='right';ctx.fillText('Aft',ml+pw-4,mt+ph-4);
+  ctx.strokeStyle=d?'rgba(255,255,255,.15)':'rgba(0,0,0,.12)';ctx.lineWidth=0.8;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(px(78.7),mt+10);ctx.lineTo(px(78.7),mt+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=d?'rgba(255,255,255,.32)':'rgba(0,0,0,.32)';ctx.font='7px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText('78.7',px(78.7),mt+9);
+  var R=8;
+  if(zf_x!==null&&zf_w){var x=px(zf_x),y=py(zf_w);ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);ctx.fillStyle='#1a7fe8';ctx.fillRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.strokeStyle='#0a4f9a';ctx.lineWidth=1.3;ctx.strokeRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.restore();ctx.fillStyle=d?'#93c5fd':'#0a3060';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText('ZF',x,y+R+9);}
+  if(to_x!==null&&to_w){var x2=px(to_x),y2=py(to_w);ctx.beginPath();ctx.arc(x2,y2,R,0,Math.PI*2);ctx.fillStyle='#007a38';ctx.fill();ctx.strokeStyle='#004d22';ctx.lineWidth=1.3;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('TO',x2,y2);ctx.textBaseline='alphabetic';}
+}
+function drawLat(to_x,to_y,zf_x,zf_y){
+  var cv=g('rc'),dpr=Math.min(window.devicePixelRatio||1,3);
+  var W=cv.parentElement.clientWidth||320,H=220;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  var ml=36,mr=14,mt=16,mb=34,pw=W-ml-mr,ph=H-mt-mb;
+  var X0=75,X1=85,Y0=-3.5,Y1=3.5;
+  function px(x){return ml+mv(x,X0,X1,0,pw);}function py(y){return mt+mv(y,Y1,Y0,0,ph);}
+  ctx.clearRect(0,0,W,H);
+  var d=dk(),gc=d?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)',ac=d?'rgba(255,255,255,.3)':'rgba(0,0,0,.3)',tc=d?'rgba(255,255,255,.55)':'rgba(0,0,0,.55)',es=d?'#60a5fa':'#1a4a8c';
+  ctx.strokeStyle=gc;ctx.lineWidth=0.5;
+  [75,77,79,81,83,85].forEach(function(x){ctx.beginPath();ctx.moveTo(px(x),mt);ctx.lineTo(px(x),mt+ph);ctx.stroke();});
+  [-3,-2,-1,0,1,2,3].forEach(function(y){ctx.beginPath();ctx.moveTo(ml,py(y));ctx.lineTo(ml+pw,py(y));ctx.stroke();});
+  var ex0=px(75.4),ex1=px(83.5),ey0=py(3.1),ey1=py(-3.1);
+  ctx.fillStyle=d?'rgba(96,165,250,.14)':'rgba(26,74,140,.09)';ctx.fillRect(ex0,ey0,ex1-ex0,ey1-ey0);
+  ctx.strokeStyle=es;ctx.lineWidth=1.8;ctx.strokeRect(ex0,ey0,ex1-ex0,ey1-ey0);
+  ctx.strokeStyle=d?'rgba(255,255,255,.15)':'rgba(0,0,0,.12)';ctx.lineWidth=0.8;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(ml,py(0));ctx.lineTo(ml+pw,py(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px(78.7),mt);ctx.lineTo(px(78.7),mt+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle=ac;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  ctx.fillStyle=tc;ctx.font='9px -apple-system,sans-serif';ctx.textAlign='center';
+  [75,77,79,81,83,85].forEach(function(x){ctx.fillText(x,px(x),mt+ph+12);});
+  ctx.fillText('Xcg (in.)',px(80),mt+ph+25);ctx.textAlign='right';
+  [-3,-2,-1,0,1,2,3].forEach(function(y){ctx.fillText(y,ml-4,py(y)+3);});
+  ctx.save();ctx.translate(10,mt+ph/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('Ycg (in.)',0,0);ctx.restore();
+  ctx.fillStyle=es;ctx.font='8px -apple-system,sans-serif';ctx.textAlign='left';ctx.fillText('+3.1',ex1+3,ey0+8);ctx.fillText('-3.1',ex1+3,ey1-2);
+  ctx.fillStyle=d?'rgba(255,255,255,.32)':'rgba(0,0,0,.32)';ctx.font='7px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText('X=78.7',px(78.7),mt+9);
+  var R=8;
+  if(zf_x!==null&&zf_y!==null){var x=px(zf_x),y=py(zf_y);ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);ctx.fillStyle='#1a7fe8';ctx.fillRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.strokeStyle='#0a4f9a';ctx.lineWidth=1.3;ctx.strokeRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.restore();}
+  if(to_x!==null&&to_y!==null){var x2=px(to_x),y2=py(to_y);ctx.beginPath();ctx.arc(x2,y2,R,0,Math.PI*2);ctx.fillStyle='#007a38';ctx.fill();ctx.strokeStyle='#004d22';ctx.lineWidth=1.3;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('TO',x2,y2);ctx.textBaseline='alphabetic';}
+}
+function redraw(){drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w);drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y);}
+var INPUT_ORDER=['w0','xa0','ya0','w1','w2','w3','w4','w5','w6','w7','w8','w9'];
+
+// ── Custom Keypad ──────────────────────────────────────────────────────────
+var kpTarget=null,kpVal='';
+
+function kpOpen(inp,label){if(isDesktop)return;
+  kpTarget=inp;
+  kpVal=inp.value.trim();
+  if(kpVal===''||kpVal==='-')kpVal='';
+  g('kp-label').textContent=label||'Enter value';
+  kpRefresh();
+  g('kp-overlay').classList.add('open');
+  // Prevent native keyboard
+  inp.blur();
+  inp.setAttribute('readonly','readonly');
+}
+
+function kpClose(e){
+  if(e&&e.target!==g('kp-overlay'))return;
+  kpCommit();
+}
+
+function kpCommit(){
+  if(kpTarget){
+    kpTarget.value=kpVal||'';
+    kpTarget.removeAttribute('readonly');
+    recalc();
+    // Advance to next field after done
+    var nextId=INPUT_ORDER[INPUT_ORDER.indexOf(kpTarget.id)+1];
+    if(nextId){
+      var next=g(nextId);
+      if(next){
+        setTimeout(function(){
+          var lbl=next.closest('.inp-grp').querySelector('.inp-lbl');
+          kpOpen(next,lbl?lbl.textContent:'');
+        },120);
+      }
+    } else {
+      g('kp-overlay').classList.remove('open');
+    }
+  }
+}
+
+function kpDone(){
+  if(kpTarget){
+    kpTarget.value=kpVal||'';
+    kpTarget.removeAttribute('readonly');
+    recalc();
+  }
+  g('kp-overlay').classList.remove('open');
+  kpTarget=null;
+}
+
+function kpNum(n){
+  if(n==='.'&&kpVal.includes('.'))return;
+  if(n==='.'&&kpVal==='-')kpVal='-0.';
+  else if(n==='.'&&kpVal==='')kpVal='0.';
+  else kpVal+=n;
+  kpRefresh();
+  if(kpTarget)kpTarget.value=kpVal;
+  recalc();
+}
+
+function kpDel(){
+  kpVal=kpVal.slice(0,-1);
+  if(kpVal==='-')kpVal='';
+  kpRefresh();
+  if(kpTarget)kpTarget.value=kpVal;
+  recalc();
+}
+
+function kpClear(){
+  kpVal='';
+  kpRefresh();
+  if(kpTarget)kpTarget.value='';
+  recalc();
+}
+
+function kpToggleNeg(){
+  if(kpVal===''||kpVal==='0'||kpVal==='0.'){kpRefresh();return;}
+  kpVal=kpVal.startsWith('-')?kpVal.slice(1):('-'+kpVal);
+  kpRefresh();
+  if(kpTarget)kpTarget.value=kpVal;
+  recalc();
+}
+
+function kpRefresh(){
+  var disp=g('kp-display');
+  disp.textContent=kpVal||'—';
+  disp.className='kp-display'+(kpVal.startsWith('-')?' neg':'');
+}
+
+// Wire all inputs to open keypad instead of native keyboard
+
+// Detect desktop (fine pointer = mouse/trackpad) vs mobile (coarse = touch)
+var isDesktop = window.matchMedia('(pointer: fine)').matches;
+
+document.querySelectorAll('.inp').forEach(function(el){
+  el.addEventListener('input', recalc);
+
+  if(isDesktop){
+    // Desktop: allow normal keyboard input, no readonly
+    el.removeAttribute('readonly');
+    el.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.keyCode === 13){
+        e.preventDefault();
+        var idx = INPUT_ORDER.indexOf(el.id);
+        if(idx >= 0 && idx < INPUT_ORDER.length - 1){
+          var next = g(INPUT_ORDER[idx + 1]);
+          if(next){ next.focus(); next.select(); }
+        }
+      }
+    });
+    el.addEventListener('focus', function(){
+      setTimeout(function(){ el.select(); }, 10);
+    });
+  } else {
+    // Mobile: readonly + custom keypad
+    el.setAttribute('readonly', 'readonly');
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      var lbl = el.closest('.inp-grp');
+      lbl = lbl ? lbl.querySelector('.inp-lbl') : null;
+      kpOpen(el, lbl ? lbl.textContent : 'Enter value');
+    });
+    el.addEventListener('focus', function(){
+      el.blur();
+      var lbl = el.closest('.inp-grp');
+      lbl = lbl ? lbl.querySelector('.inp-lbl') : null;
+      kpOpen(el, lbl ? lbl.textContent : 'Enter value');
+    });
+  }
+});
+
+
+window.addEventListener('resize',redraw);
+new ResizeObserver(redraw).observe(g('lc').parentElement.parentElement);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',redraw);
+redraw();
+
+function showToast(msg){
+  var t=g('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+</script>
+
+<!-- Custom Keypad -->
+<div class="kp-overlay" id="kp-overlay" onclick="kpClose(event)">
+  <div class="kp" onclick="event.stopPropagation()">
+    <div class="kp-header">
+      <div class="kp-label" id="kp-label">Weight (lb)</div>
+      <div class="kp-display" id="kp-display">—</div>
+    </div>
+    <div class="kp-grid">
+      <button class="kp-btn" onclick="kpNum('7')" type="button">7</button>
+      <button class="kp-btn" onclick="kpNum('8')" type="button">8</button>
+      <button class="kp-btn" onclick="kpNum('9')" type="button">9</button>
+      <button class="kp-btn" onclick="kpNum('4')" type="button">4</button>
+      <button class="kp-btn" onclick="kpNum('5')" type="button">5</button>
+      <button class="kp-btn" onclick="kpNum('6')" type="button">6</button>
+      <button class="kp-btn" onclick="kpNum('1')" type="button">1</button>
+      <button class="kp-btn" onclick="kpNum('2')" type="button">2</button>
+      <button class="kp-btn" onclick="kpNum('3')" type="button">3</button>
+      <button class="kp-btn kp-neg" onclick="kpToggleNeg()" type="button">+/&#8722;</button>
+      <button class="kp-btn" onclick="kpNum('0')" type="button">0</button>
+      <button class="kp-btn" onclick="kpNum('.')" type="button">.</button>
+      <button class="kp-btn kp-del" onclick="kpDel()" type="button" style="grid-column:span 2">&#9003;</button>
+      <button class="kp-btn kp-del" onclick="kpClear()" type="button">C</button>
+    </div>
+    <div class="kp-done-row">
+      <button class="kp-btn kp-done" onclick="kpDone()" type="button" style="width:100%">Done &#10003;</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div></body>
+</html>
