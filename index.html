@@ -594,6 +594,28 @@ function recalc(){
     var winp=g('w'+wi2);
     if(winp){if(!wOk)winp.classList.add('over-weight');else winp.classList.remove('over-weight');}
   }
+  // Baggage limit flags
+  var mainBagW=gv('w5'),frontBagW=gv('w6');
+  var mainNote=g('bag-main-note'),frontNote=g('bag-front-note');
+  var mainInp=g('w5'),frontInp=g('w6');
+  if(mainNote){
+    if(mainBagW!==null&&mainBagW>88){
+      mainNote.innerHTML='<span style="color:var(--red);font-weight:700">&#10007; Exceeds max 88 lb by '+(mainBagW-88).toFixed(1)+' lb</span>';
+      if(mainInp)mainInp.classList.add('over-weight');
+    } else {
+      mainNote.innerHTML='Max 88 lb';
+      if(mainInp&&mainBagW===null||mainBagW<=88)mainInp.classList.remove('over-weight');
+    }
+  }
+  if(frontNote){
+    if(frontBagW!==null&&frontBagW>11){
+      frontNote.innerHTML='<span style="color:var(--red);font-weight:700">&#10007; Exceeds max 11 lb by '+(frontBagW-11).toFixed(1)+' lb</span>';
+      if(frontInp)frontInp.classList.add('over-weight');
+    } else {
+      frontNote.innerHTML='Max 11 lb';
+      if(frontInp&&frontBagW===null||frontBagW<=11)frontInp.classList.remove('over-weight');
+    }
+  }
   g('sgrid').style.display='';
   sCard('sv-zw','ss-zw',fmt(zw,1),'lb','Fuel: '+fmt(tw-zw,1)+' lb',null,null);
   sCard('sv-lx','ss-lx',fmt(to_x,3),'in','Long. C.G.: 75.4-83.5 in',inP?'ok':'wn',inP?'✓ In limits':'✗ Out of limits');
@@ -609,14 +631,6 @@ function recalc(){
   // Chart status badges
   setSt('lst',to_x!==null?(lstOk?'✓ IN LIMITS':'✗ OUT'):'-',lstOk?'cok':'cwn');
   setSt('rst',to_y!==null?(rstOk?'✓ IN LIMITS':'✗ OUT'):'-',rstOk?'cok':'cwn');
-  // Totals block
-  g('totblock').style.display='';
-  g('t-zw').textContent=fmt(zw,1)+' lb';
-  g('t-zx').textContent=fmt(zf_x,3)+' in';
-  g('t-zy').textContent=fmt(zf_y,3)+' in';
-  g('t-tw').textContent=fmt(tw,1)+' lb';
-  g('t-tx').textContent=fmt(to_x,3)+' in';
-  g('t-ty').textContent=fmt(to_y,3)+' in';
   // Limit bar
   var lb=g('lbar');lb.className='lbar '+(all&&allZf?'lok':'lwn');
   lb.innerHTML='<strong>'+(all&&allZf?'All limits satisfied':'Limit(s) exceeded')+'</strong>'+
