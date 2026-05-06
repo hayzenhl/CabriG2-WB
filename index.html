@@ -12,297 +12,487 @@
 <meta name="apple-mobile-web-app-title" content="G2 WandB">
 <title>Cabri G2 - Weight and Balance</title>
 <style>
-:root{--navy:#1a2e4a;--blue:#1a7fe8;--blue-bg:#e8f2fd;--green:#007a38;--green-bg:#e6f4ec;--red:#c0392b;--red-bg:#fdf0ef;--border:#d1d5db;--border-light:#e5e7eb;--text:#111827;--text-mid:#374151;--text-muted:#6b7280;--bg:#f3f4f6;--surface:#ffffff;}
-.kp-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.3);display:none;align-items:flex-end;justify-content:center}
-/* Custom keypad */
-.kp-overlay.open{display:flex}
-.kp{background:var(--surface);border-radius:16px 16px 0 0;padding:12px 12px calc(20px + env(safe-area-inset-bottom,16px));width:100%;max-width:420px;box-shadow:0 -4px 24px rgba(0,0,0,0.2)}
-.kp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
-.kp-context{font-size:10px;font-weight:600;color:var(--text-muted);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.05em}
-.kp-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
-.kp-display{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-size:22px;font-weight:700;color:var(--blue);text-align:right;min-height:44px;letter-spacing:.02em;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-.kp-display.neg{color:var(--red)}
-.kp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.kp-btn{height:56px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:22px;font-weight:500;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background .08s}
-.kp-btn:active{background:var(--border)}
-.kp-btn.kp-neg{background:var(--blue-bg);color:var(--blue);border-color:var(--blue);font-size:20px;font-weight:700}
-.kp-btn.kp-neg:active{background:var(--blue);color:#fff}
-.kp-btn.kp-del{background:var(--red-bg);color:var(--red);border-color:var(--red);font-size:20px}
-.kp-btn.kp-del:active{background:var(--red);color:#fff}
-.kp-btn.kp-done{background:var(--green);color:#fff;border-color:var(--green);font-size:16px;font-weight:800;height:56px}
-.kp-btn.kp-done:active{opacity:.85}
-.kp-done-row{margin-top:8px}
+/* ── Reset & tokens ──────────────────────────────────────── */
+:root{
+  --navy:#0f2130;
+  --navy-mid:#16303f;
+  --blue:#0f9580;
+  --blue-bg:#e6f7f4;
+  --green:#0f9580;
+  --green-bg:#e6f7f4;
+  --amber:#b45309;
+  --red:#c0392b;
+  --red-bg:#fef2f2;
+  --border:#e2e8ed;
+  --border-light:#edf1f4;
+  --text:#0d1b27;
+  --text-mid:#334155;
+  --text-muted:#64748b;
+  --bg:#f0f4f6;
+  --surface:#ffffff;
+  --radius:12px;
+  --radius-sm:7px;
+  --radius-lg:16px;
+  --shadow:0 1px 3px rgba(15,33,48,.07),0 1px 2px rgba(15,33,48,.04);
+  --teal:#0f9580;
+  --teal-bg:#e6f7f4;
+  --teal-dark:#0a5444;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --navy:#07151f;
+    --navy-mid:#0d2130;
+    --blue:#14b899;
+    --blue-bg:#061c18;
+    --green:#14b899;
+    --green-bg:#061c18;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --red-bg:#2d1010;
+    --border:#1e3040;
+    --border-light:#162636;
+    --text:#f0f6fa;
+    --text-mid:#94a3b8;
+    --text-muted:#64748b;
+    --bg:#061018;
+    --surface:#0d1e2c;
+    --shadow:0 1px 3px rgba(0,0,0,.5);
+    --teal:#14b899;
+    --teal-bg:#061c18;
+    --teal-dark:#9fdfcf;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-
-@media(prefers-color-scheme:dark){:root{--navy:#0d1b2e;--blue:#60a5fa;--blue-bg:#1e3a5f;--green:#34d06e;--green-bg:#052e16;--red:#f87171;--red-bg:#450a0a;--border:#374151;--border-light:#1f2937;--text:#f9fafb;--text-mid:#d1d5db;--text-muted:#6b7280;--bg:#111827;--surface:#1f2937;}}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-.hdr{background:var(--navy);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-.hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
-.hdr h1{font-size:17px;font-weight:700;color:#fff;line-height:1.2}
-.hdr-sub{font-size:10px;color:rgba(255,255,255,.55);margin-top:2px}
+/* ── Header ─────────────────────────────────────────────── */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  background:var(--navy);
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.hdr-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px 8px;gap:8px}
+.hdr h1{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.2}
+.hdr-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px;display:flex;align-items:center;gap:6px}
 .btn-row{display:flex;gap:6px;flex-shrink:0}
-.hbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;font-weight:600;padding:10px 14px;min-height:44px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:inline-flex;align-items:center;-webkit-appearance:none}
+.hbtn{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:11px;font-weight:600;padding:7px 12px;
+  border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;
+  white-space:nowrap;min-height:36px;display:inline-flex;align-items:center;
+  -webkit-appearance:none;touch-action:manipulation;
+  transition:background .15s;
+}
+.hbtn:hover{background:rgba(255,255,255,.22)}
 .hbtn:active{background:rgba(255,255,255,.3)}
-.meta{display:flex;gap:8px;flex-wrap:wrap}
+
+/* wt-chip */
+#wt-chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;
+  background:rgba(255,255,255,.15);color:#fff;transition:background .2s,color .2s}
+.wt-chip-ok{background:rgba(15,149,128,.3)!important;color:#9fe8d8!important}
+.wt-chip-warn{background:rgba(251,191,36,.25)!important;color:#fcd34d!important}
+.wt-chip-over{background:rgba(239,68,68,.3)!important;color:#fca5a5!important}
+
+/* Meta row */
+.meta{display:flex;gap:10px;padding:6px 16px 10px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08)}
 .mf{display:flex;flex-direction:column;gap:2px}
-.mf label{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em}
-.mf input{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12px;padding:5px 8px;border-radius:6px;font-family:inherit;outline:none;width:100px}
-.mf input::placeholder{color:rgba(255,255,255,.3)}
-.mf input:focus{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
-.main{padding:12px;max-width:980px;margin:0 auto}
-.sec{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 8px;padding-left:2px}
+.mf label{font-size:9px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em}
+.mf input{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;
+  color:#fff;font-size:12px;font-weight:500;padding:4px 8px;width:110px;outline:none;font-family:inherit}
+.mf input:focus{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.15)}
+.mf input::placeholder{color:rgba(255,255,255,.25)}
+
+/* ── Aircraft bar ─────────────────────────────────────────── */
+.acft-section{background:var(--navy-mid);padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.acft-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.acft-title{font-size:9px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.07em;flex-shrink:0}
+.acft-select{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;
+  font-size:12px;font-weight:600;padding:5px 9px;border-radius:6px;font-family:inherit;
+  outline:none;cursor:pointer;flex:1;min-width:130px;max-width:200px}
+.acft-select option{background:#1a2e4a;color:#fff}
+.acft-edit-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.8);font-size:11px;font-weight:600;padding:5px 9px;
+  border-radius:6px;cursor:pointer;font-family:inherit;flex-shrink:0;-webkit-appearance:none}
+.acft-edit-btn:active{background:rgba(255,255,255,.22)}
+.acft-vals{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.08)}
+.acft-val{display:flex;flex-direction:column;gap:1px}
+.acft-val-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em}
+.acft-val-num{font-size:12px;font-weight:700;color:#fff}
+
+/* ── Main content ─────────────────────────────────────────── */
+.main{padding:12px 12px 80px;max-width:680px;margin:0 auto}
+
+/* ── Preset buttons ───────────────────────────────────────── */
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.preset-btn{
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-mid);font-size:11px;font-weight:600;
+  padding:7px 13px;border-radius:20px;cursor:pointer;font-family:inherit;
+  transition:all .12s;-webkit-appearance:none;touch-action:manipulation;
+}
+.preset-btn:hover{background:var(--teal-bg);border-color:var(--teal);color:var(--teal-dark)}
+.preset-btn:active{transform:scale(.97)}
+
+/* ── Group labels ─────────────────────────────────────────── */
+.grp-label{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--text-muted);padding:14px 0 6px;border-bottom:1.5px solid var(--border);
+  margin-bottom:6px;
+}
+
+/* ── Cards ────────────────────────────────────────────────── */
 .cards{display:flex;flex-direction:column;gap:0}
-.grp-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;padding:10px 4px 4px;border-bottom:1px solid var(--border-light);margin-bottom:6px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin-bottom:8px}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--teal);
+  border-radius:var(--radius);margin-bottom:7px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 12px 8px}
 .card-info{flex:1;min-width:0}
 .card-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
 .card-note{font-size:10px;color:var(--text-muted);margin-top:2px}
-.card-arms{font-size:10px;color:var(--text-muted);margin-top:3px}
-.card-inputs{display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
-.inp-grp{display:flex;flex-direction:column;align-items:center;gap:2px}
-.inp-lbl{font-size:9px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-.inp{width:76px;border:1.5px solid var(--border);border-radius:8px;background:var(--blue-bg);color:var(--blue);font-size:15px;font-weight:700;text-align:center;padding:8px 4px;font-family:inherit;outline:none;-moz-appearance:textfield;transition:border-color .15s,box-shadow .15s}
-.inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,127,232,.2)}
-.inp::placeholder{color:#93c5fd;font-weight:400;font-size:11px}
-.inp::-webkit-outer-spin-button,.inp::-webkit-inner-spin-button{-webkit-appearance:none}
-.card-moms{display:flex;gap:12px;font-size:10px;color:var(--text-muted);border-top:1px solid var(--border-light);padding-top:7px}
+.card-arms{font-size:10px;color:var(--text-muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.card-inputs{display:flex;gap:8px;flex-shrink:0;align-items:flex-end}
+.inp-grp{display:flex;flex-direction:column;gap:3px}
+.inp-lbl{font-size:9px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:right}
+.card-moms{
+  display:flex;gap:12px;padding:7px 12px;
+  background:var(--bg);border-top:1px solid var(--border-light);
+  font-size:10px;color:var(--text-muted);
+}
 .mom-item{display:flex;flex-direction:column;gap:1px}
 .mom-lbl{font-size:9px;color:var(--text-muted)}
-.mom-val{font-weight:600;color:var(--text-mid);font-size:11px}
-.tot-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-top:10px;overflow:hidden}
-.tot-row{display:flex;align-items:center;padding:10px 12px;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border-light)}
-.tot-row:last-child{border-bottom:none}
-.tot-zf{background:var(--blue-bg)}
-.tot-to{background:var(--green-bg)}
-.tot-label{font-size:11px;font-weight:700;min-width:80px;flex-shrink:0}
-.tot-zf .tot-label{color:var(--blue)}
-.tot-to .tot-label{color:var(--green)}
-.tot-item{display:flex;flex-direction:column;gap:1px;min-width:78px}
-.tot-item-lbl{font-size:9px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-.tot-item-val{font-size:13px;font-weight:700}
-.tot-zf .tot-item-val{color:var(--blue)}
-.tot-to .tot-item-val{color:var(--green)}
-.lbar{border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;font-weight:700;border:1.5px solid;line-height:1.5}
-.lbar-items{display:flex;flex-direction:column;gap:3px;margin-top:6px}
-.lbar-item{font-size:11px;font-weight:500}
-.lok{background:var(--green-bg);color:var(--green);border-color:#6ee7b7}
-.lwn{background:var(--red-bg);color:var(--red);border-color:#fca5a5}
-.lnt{background:var(--surface);color:var(--text-muted);border-color:var(--border)}
-.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-.sl{font-size:10px;color:var(--text-muted);font-weight:600;margin-bottom:4px}
-.sv{font-size:20px;font-weight:700;color:var(--text);line-height:1}
-.sv small{font-size:12px;font-weight:400;color:var(--text-muted)}
-.ss{font-size:10px;margin-top:4px;font-weight:600}
-.sok{color:var(--green)}.swn{color:var(--red)}.snt{color:var(--text-muted)}
-.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-@media(max-width:600px){.cgrid{grid-template-columns:1fr}}
-.ccard{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.chdr{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid var(--border-light)}
-.ctitle{font-size:11px;font-weight:700;color:var(--text)}
-.cst{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
-.cok{background:var(--green-bg);color:var(--green)}.cwn{background:var(--red-bg);color:var(--red)}.cnt{background:var(--border-light);color:var(--text-muted)}
-canvas{display:block;width:100%!important}
-.cleg{display:flex;gap:12px;padding:6px 12px;font-size:10px;color:var(--text-muted)}
-.ld{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
-.ldsq{border-radius:1px}
-.cbtn{display:block;width:100%;margin:12px 0 0;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:12px;padding:10px;border-radius:8px;cursor:pointer;font-family:inherit;text-align:center}
-.cbtn:active{background:var(--border-light)}
-.foot{text-align:center;font-size:10px;color:var(--text-muted);padding:16px;border-top:1px solid var(--border-light);margin-top:16px;line-height:1.8}
-.foot strong{color:var(--red)}
+.mom-val{font-size:12px;font-weight:600;color:var(--text-mid);font-variant-numeric:tabular-nums}
 
-@media print{
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  @page{margin:1.5cm;size:A4 portrait}
-  body{background:#fff!important;color:#000!important;font-size:9pt}
-  .hbtn,.cbtn,.presets,.kp-overlay,.modal-overlay,.acft-section,.toast{display:none!important}
-  .hdr{position:static!important;background:#1a2e4a!important;color:#fff!important;padding:10px 14px;box-shadow:none;page-break-after:avoid}
-  .hdr h1{font-size:14pt;color:#fff!important}
-  .hdr-sub,.mf label{color:rgba(255,255,255,0.7)!important;font-size:8pt}
-  .mf input{background:rgba(255,255,255,.15)!important;color:#fff!important;border-color:rgba(255,255,255,.3)!important}
-  .main{padding:8px 14px!important}
-  .sec{font-size:7pt;margin:8px 0 4px;color:#555!important}
-  .cards{display:block!important}
-  .grp-label{font-size:7pt;padding:4px 0 2px;border-bottom:1px solid #ccc;margin:6px 0 3px;color:#555!important}
-  .card{border:none!important;border-bottom:0.5px solid #e0e0e0!important;border-radius:0!important;padding:4px 0!important;margin-bottom:0!important;display:grid!important;grid-template-columns:130px 1fr auto!important;align-items:center;gap:6px;page-break-inside:avoid}
-  .card-top{display:contents!important}
-  .card-info{display:flex;flex-direction:column}
-  .card-name{font-size:8.5pt;font-weight:700}
-  .card-note,.card-arms{font-size:7pt;color:#555}
-  .door-toggle{font-size:7pt;color:#555}.toggle-wrap{display:none!important}
-  .card-inputs .inp-grp{flex-direction:row;align-items:center;gap:4px}
-  .inp-lbl{font-size:7pt;color:#666;white-space:nowrap}
-  .inp{background:#eef2ff!important;color:#000!important;border:0.5px solid #99b!important;font-size:9pt!important;font-weight:700!important;width:54px!important;padding:2px 4px!important;border-radius:3px!important;text-align:center}
-  .card-moms{border-top:none!important;padding-top:0!important;grid-column:3;font-size:7.5pt;text-align:right;display:flex;flex-direction:column;gap:0}
-  .mom-lbl{font-size:7pt;color:#666}.mom-val{font-size:8pt;font-weight:600}
-  .tot-block{border:1px solid #ccc!important;border-radius:4px!important;margin:8px 0;overflow:hidden}
-  .tot-row{padding:5px 10px!important;flex-wrap:nowrap!important;gap:8px}
-  .tot-label{font-size:8pt!important;min-width:80px}
-  .tot-item-lbl{font-size:7pt!important}.tot-item-val{font-size:10pt!important;font-weight:700}
-  .tot-zf{background:#e8f2fd!important}.tot-to{background:#e6f4ec!important}
-  .lbar{padding:6px 10px!important;font-size:9pt!important;margin:6px 0;border-radius:4px!important}
-  .lok{background:#e6f4ec!important;color:#1a5c30!important;border-color:#a3d9b8!important}
-  .lwn{background:#fdf0ef!important;color:#8b1a10!important;border-color:#f5c6c0!important}
-  .sgrid{grid-template-columns:1fr 1fr 1fr 1fr!important;gap:4px!important;margin:6px 0}
-  .sc{padding:5px 8px!important;border:0.5px solid #ccc!important;border-radius:4px!important}
-  .sl{font-size:7pt!important;color:#555!important}.sv{font-size:11pt!important}.ss{font-size:7pt!important}
-  .cgrid{grid-template-columns:1fr 1fr!important;gap:8px!important;margin-top:8px;page-break-before:avoid}
-  .ccard{border:0.5px solid #ccc!important;border-radius:4px!important;page-break-inside:avoid}
-  .chdr{padding:4px 8px!important;font-size:8pt!important;font-weight:700}
-  .cst{font-size:7.5pt!important;padding:1px 6px!important}
-  .cok{background:#e6f4ec!important;color:#1a5c30!important}
-  .cwn{background:#fdf0ef!important;color:#8b1a10!important}
-  .cleg{font-size:7pt!important;padding:3px 8px!important}
-  canvas{height:160px!important}
-  .foot{font-size:7pt!important;padding:8px 0!important;margin-top:8px;border-top:0.5px solid #ccc!important}
-  .foot strong{color:#c0392b!important}
+/* Inputs */
+.inp{
+  cursor:text;
+  width:82px;height:34px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--text);font-size:13px;font-weight:600;
+  padding:0 9px;text-align:right;outline:none;font-family:inherit;
+  transition:border-color .12s,box-shadow .12s;-moz-appearance:textfield;
 }
-@media(pointer:fine){
-  /* ── Keypad: never on desktop ── */
-  .kp-overlay{display:none!important}
+.inp::-webkit-outer-spin-button,.inp::-webkit-inner-spin-button{-webkit-appearance:none}
+.inp:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,149,128,.12);background:var(--teal-bg);color:var(--teal-dark)}
+.inp.over-weight{background:var(--red-bg)!important;color:var(--red)!important;border-color:var(--red)!important}
+.inp::placeholder{color:var(--border)}
 
-  /* ── Layout ── */
-  .hdr{padding:12px 28px 10px}
-  .main{padding:16px 32px 48px;max-width:1100px;margin:0 auto}
-  .acft-section{padding:10px 28px}
-
-  /* ── Inputs: native keyboard, polished styling ── */
-  .inp{background:var(--surface);color:var(--text);border:1.5px solid var(--border);
-    cursor:text;font-size:13px;font-weight:600;padding:5px 8px;width:82px;
-    border-radius:7px;transition:border-color .15s,box-shadow .15s}
-  .inp:hover:not(:focus){border-color:var(--text-muted)}
-  .inp:focus{background:var(--blue-bg);color:var(--blue);border-color:var(--blue);
-    box-shadow:0 0 0 2px rgba(26,127,232,.15);outline:none}
-  .inp.over-weight{background:var(--red-bg)!important;color:var(--red)!important;
-    border-color:var(--red)!important}
-
-  /* ── Presets ── */
-  .presets{gap:8px;margin:10px 0 14px}
-  .preset-btn{font-size:12px;padding:7px 16px;border-radius:8px;cursor:pointer}
-  .preset-btn:hover{background:var(--border-light)}
-
-  /* ── Card grid: 2 columns ── */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:0 32px}
-  .grp-label{grid-column:1/-1;font-size:9px;font-weight:700;color:var(--text-muted);
-    text-transform:uppercase;letter-spacing:.08em;padding:16px 0 6px;
-    border-bottom:1px solid var(--border-light);margin-bottom:0}
-  
-
-  /* ── Card row layout ── */
-  .card{padding:9px 14px;margin-bottom:6px;display:flex;align-items:center;gap:14px;
-    border-radius:10px}
-  .card-top{display:contents}
-  .card-info{flex:1;min-width:0}
-  .card-name{font-size:12px;font-weight:700}
-  .card-note{font-size:10px;color:var(--text-muted)}
-  .card-arms{font-size:10px;color:var(--text-muted);margin-top:2px}
-  .card-inputs{flex-shrink:0;display:flex;gap:8px;align-items:flex-end}
-  .inp-grp{gap:3px}
-  .inp-lbl{font-size:9px;font-weight:600;color:var(--text-muted)}
-  .card-moms{border-top:0.5px solid var(--border-light);padding-top:6px;
-    margin-top:6px;gap:20px}
-  .mom-lbl{font-size:9px;color:var(--text-muted)}.mom-val{font-size:11px;font-weight:700}
-  .door-toggle{margin-top:4px}
-  .toggle-opt{font-size:10px;padding:3px 9px}
-
-  /* ── Stats: 3 cards wide ── */
-  .sgrid{grid-template-columns:repeat(3,1fr);gap:10px}
-  .sc{border-radius:12px;padding:12px 16px}
-  .sl{font-size:10px}
-  .sv{font-size:20px}
-  .ss{font-size:11px;margin-top:4px}
-
-  /* ── Charts always side by side ── */
-  .cgrid{grid-template-columns:1fr 1fr;gap:12px}
-  .ccard{border-radius:12px}
-  .chdr{padding:10px 14px 8px;font-size:11px}
-
-  /* ── Totals ── */
-  .tot-row{flex-wrap:nowrap;padding:10px 14px}
-  .tot-label{font-size:12px;font-weight:700}
-  .tot-item-val{font-size:15px;font-weight:700}
-  .tot-item-lbl{font-size:9px}
-
-  /* ── Limit bar ── */
-  .lbar{border-radius:12px;padding:12px 16px;margin:12px 0}
-  .lbar-item{font-size:12px}
-
-  /* ── Modal ── */
-  .modal{max-width:480px;padding:24px}
-  .mf input,.meta input{width:130px}
-
-  /* ── Header ── */
-  .hbtn{font-size:12px;padding:7px 16px;border-radius:7px}
-  .hdr h1{font-size:17px}
-}
-
-
-/* Aircraft selector */
-.acft-section{background:var(--navy);padding:10px 12px;margin-bottom:0}
-@media(prefers-color-scheme:dark){.acft-section{background:#0a1522;border-bottom:1px solid var(--border)}}
-.acft-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.acft-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.07em;flex-shrink:0}
-.acft-select{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:12px;font-weight:600;padding:6px 10px;border-radius:7px;font-family:inherit;outline:none;cursor:pointer;flex:1;min-width:140px;max-width:220px}
-.acft-select option{background:#1a2e4a;color:#fff}
-.acft-save-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:600;padding:6px 10px;border-radius:7px;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
-.acft-save-btn:active{background:rgba(255,255,255,0.3)}
-.acft-vals{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-.acft-val{display:flex;flex-direction:column;gap:1px}
-.acft-val-lbl{font-size:9px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.06em}
-.acft-val-num{font-size:12px;font-weight:700;color:#fff}
-
-/* Preset buttons */
-.presets{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
-.preset-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-mid);font-size:11px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;font-family:inherit;flex-shrink:0;transition:background .1s}
-.preset-btn:active{background:var(--border-light)}
+/* Door toggles */
+.door-toggle{display:flex;align-items:center;gap:6px;margin-top:5px}
+.toggle-lbl{font-size:9px;color:var(--text-muted);font-weight:500}
+.toggle-wrap{display:flex;background:var(--border-light);border-radius:20px;padding:2px;gap:2px}
+.toggle-opt{font-size:10px;font-weight:600;padding:4px 10px;border-radius:16px;cursor:pointer;border:none;font-family:inherit;background:transparent;color:var(--text-muted);transition:all .12s;-webkit-appearance:none}
+.toggle-opt.active{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.toggle-opt.active.on{color:var(--green)}
+.toggle-opt.active.off{color:var(--red)}
 
 /* Fuel note */
+.fuel-note{background:#fffbeb;border:1px solid #fcd34d;border-radius:var(--radius);padding:10px 13px;margin-bottom:10px}
+@media(prefers-color-scheme:dark){.fuel-note{background:#1c1400;border-color:#78350f}}
+.fuel-note-title{font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px}
+@media(prefers-color-scheme:dark){.fuel-note-title{color:#fcd34d}}
+.fuel-note-body{font-size:11px;color:#92400e;line-height:1.6;margin-bottom:7px}
+@media(prefers-color-scheme:dark){.fuel-note-body{color:#fbbf24}}
+.fuel-note-bands{display:flex;gap:5px;flex-wrap:wrap}
+.fnb{font-size:10px;font-weight:600;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:20px;padding:3px 9px;white-space:nowrap}
+@media(prefers-color-scheme:dark){.fnb{background:#451a03;border-color:#78350f;color:#fcd34d}}
+.fuel-note-sub{font-size:10px;color:#a16207;margin-top:6px;line-height:1.5;opacity:.85}
+@media(prefers-color-scheme:dark){.fuel-note-sub{color:#d97706}}
+.fuel-cap{font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4}
+.fuel-cap:empty{display:none}
 
-@media(prefers-color-scheme:dark){}
+/* ── Totals block ─────────────────────────────────────────── */
+.tot-wrap{margin-bottom:10px}
+.tot-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.tot-row{display:flex;align-items:center;gap:0;padding:10px 14px;flex-wrap:wrap;gap:16px}
+.tot-zf{border-bottom:1px solid var(--border-light)}
+.tot-to{background:var(--surface)}
+.tot-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;width:70px;flex-shrink:0}
+.tot-item{display:flex;flex-direction:column;gap:1px}
+.tot-item-lbl{font-size:9px;color:var(--text-muted)}
+.tot-item-val{font-size:14px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
 
-/* Aircraft modal */
-.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:16px}
+/* ── Limit bar ────────────────────────────────────────────── */
+.lbar{
+  border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;
+  background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);
+}
+.lok{background:var(--teal-bg)!important;border-color:var(--teal)!important}
+.lwn{background:var(--red-bg)!important;border-color:var(--red)!important}
+.lbar strong{font-size:12px;font-weight:700;display:block;margin-bottom:8px;color:var(--text)}
+.lok strong{color:var(--teal)}
+.lwn strong{color:var(--red)}
+.lbar-section{margin-bottom:6px}
+.lbar-section:last-child{margin-bottom:0}
+.lbar-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px}
+.lbar-item{font-size:11px;color:var(--text-mid);padding:1px 0;display:flex;align-items:center;gap:5px}
+
+/* ── Stat grid ────────────────────────────────────────────── */
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;box-shadow:var(--shadow)}
+.sl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:4px}
+.sv{font-size:18px;font-weight:700;color:var(--text);line-height:1.1;font-variant-numeric:tabular-nums}
+.sv small{font-size:10px;font-weight:400;color:var(--text-muted)}
+.ss{font-size:10px;margin-top:4px}
+.snt{color:var(--text-muted)}
+.sok{color:var(--teal);font-weight:600}
+.swn{color:var(--red);font-weight:600}
+
+/* ── Chart badges ─────────────────────────────────────────── */
+.cst{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block}
+.cok{background:var(--teal-bg);color:var(--teal)}
+.cwn{background:var(--red-bg);color:var(--red)}
+.cnt{background:var(--border-light);color:var(--text-muted)}
+
+/* ── CG Charts ────────────────────────────────────────────── */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:540px){.cgrid{grid-template-columns:1fr}}
+.ccard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.chdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--navy);gap:8px}
+.chdr-title{font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.07em}
+.cbody{padding:10px 10px 6px}
+.cleg{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;padding:0 2px}
+.cleg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-muted)}
+.cleg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--text);color:var(--surface);font-size:12px;font-weight:600;
+  padding:8px 18px;border-radius:20px;z-index:9999;
+  opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── Keypad overlay ───────────────────────────────────────── */
+.kp-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.35);display:none;align-items:flex-end;justify-content:center}
+.kp-overlay.open{display:flex}
+.kp{background:var(--surface);border-radius:20px 20px 0 0;padding:14px 14px calc(22px + env(safe-area-inset-bottom,16px));width:100%;max-width:420px;box-shadow:0 -6px 32px rgba(0,0,0,.2)}
+.kp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+.kp-context{font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.kp-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.kp-display{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:24px;font-weight:700;color:var(--blue);text-align:right;min-height:48px;font-family:inherit}
+.kp-display.neg{color:var(--red)}
+.kp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kp-btn{height:58px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:22px;font-weight:400;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background .08s;-webkit-appearance:none}
+.kp-btn:active{background:var(--border)}
+.kp-btn.kp-neg{background:var(--blue-bg);color:var(--blue);border-color:var(--blue);font-size:18px;font-weight:700}
+.kp-btn.kp-neg:active{background:var(--blue);color:#fff}
+.kp-btn.kp-del{background:var(--red-bg);color:var(--red);border-color:var(--red);font-size:18px}
+.kp-btn.kp-del:active{background:var(--red);color:#fff}
+.kp-btn.kp-done{background:var(--teal);color:#fff;border-color:var(--teal);font-size:15px;font-weight:800;height:58px}
+.kp-btn.kp-done:active{opacity:.85}
+.kp-done-row{margin-top:8px}
+
+/* ── Modal ────────────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:14px;padding:20px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,0.3)}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:22px;width:100%;max-width:360px;box-shadow:0 10px 50px rgba(0,0,0,.25)}
 .modal h2{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
 .modal p{font-size:11px;color:var(--text-muted);margin-bottom:14px}
 .modal-field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
 .modal-field label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em}
-.modal-field input{border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px;font-weight:600;padding:9px 12px;font-family:inherit;outline:none;width:100%}
-.modal-field input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,127,232,.15)}
+.modal-field input{border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:15px;font-weight:600;padding:9px 12px;font-family:inherit;outline:none;width:100%}
+.modal-field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,127,232,.12)}
 .modal-btns{display:flex;gap:8px;margin-top:16px}
-.modal-btn{flex:1;padding:11px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;border:none}
-.modal-btn.primary{background:var(--navy);color:#fff}
-.modal-btn.primary:active{opacity:.85}
+.modal-btn{flex:1;padding:11px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;border:none}
+.modal-btn.primary{background:var(--teal);color:#fff}
 .modal-btn.cancel{background:var(--border-light);color:var(--text-muted)}
-.modal-btn.cancel:active{background:var(--border)}
 .modal-btn.danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
-@media(prefers-color-scheme:dark){.modal-btn.primary{background:var(--blue)}}
 
-/* Edit button on aircraft row */
-.acft-edit-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;padding:5px 8px;border-radius:6px;cursor:pointer;font-family:inherit;flex-shrink:0}
-.acft-edit-btn:active{background:rgba(255,255,255,0.25)}
+/* ── Desktop layout ───────────────────────────────────────── */
+@media(pointer:fine){
+  /* ── Hide mobile-only elements ── */
+  .kp-overlay{display:none!important}
 
-/* Door toggle */
-.door-toggle{display:flex;align-items:center;gap:6px;margin-top:4px}
-.toggle-lbl{font-size:10px;color:var(--text-muted);font-weight:500}
-.toggle-wrap{display:flex;background:var(--border-light);border-radius:20px;padding:2px;gap:2px}
-.toggle-opt{font-size:10px;font-weight:600;padding:4px 10px;border-radius:16px;cursor:pointer;border:none;font-family:inherit;background:transparent;color:var(--text-muted);transition:all .15s}
-.toggle-opt.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.toggle-opt.active.on{color:var(--green)}
-.toggle-opt.active.off{color:var(--red)}
-.kp-context{font-size:10px;font-weight:600;color:var(--text-muted);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.05em}
+  /* ── Layout ── */
+  .hdr-row{padding:11px 24px 9px}
+  .hdr h1{font-size:15px}
+  .meta{padding:5px 24px 9px;gap:0}
+  .mf{border-right:1px solid rgba(255,255,255,.07);padding:4px 16px}
+  .mf:first-child{padding-left:0}
+  .mf input{width:120px;background:transparent;border:none;color:#fff;font-size:12px;
+    font-weight:500;outline:none;padding:0;font-family:inherit}
+  .mf input::placeholder{color:rgba(255,255,255,.3)}
+  .mf label{font-size:9px;font-weight:600;color:rgba(255,255,255,.35);
+    text-transform:uppercase;letter-spacing:.07em}
+  .acft-section{padding:6px 24px}
 
-.inp.over-weight{background:var(--red-bg)!important;color:var(--red)!important;border-color:var(--red)!important;}
+  /* ── Main: side-by-side table + panel ── */
+  .main{padding:14px 24px 48px;max-width:1200px}
+  .presets{gap:6px;margin-bottom:12px}
+  .preset-btn{font-size:11px;padding:5px 13px}
 
+  /* ── Cards: hidden on desktop, replaced by .dt-table ── */
+  .cards{display:none}
+  .grp-label{display:none}
+  .fuel-note{display:none}
+  .sgrid{display:none!important}
+  .tot-wrap{display:none}
+  .cgrid{grid-template-columns:1fr 1fr;gap:10px}
 
+  /* ── Desktop layout: table left, panel right ── */
+  .dt-layout{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+  .dt-layout-wide{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
 
+  /* ── Desktop W&B Table ── */
+  .dt-section{margin-bottom:10px}
+  .dt-section-title{font-size:9px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--text-muted);padding:10px 0 5px;
+    border-bottom:1.5px solid var(--border);margin-bottom:0}
+  .dt-table{width:100%;border-collapse:separate;border-spacing:0 3px;margin-bottom:2px}
+  .dt-table th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--text-muted);padding:3px 8px;text-align:right;background:transparent}
+  .dt-table th.dt-th-item{text-align:left;padding-left:12px;width:168px}
+  .dt-table th.dt-th-arm{text-align:center;width:68px}
+  .dt-table th.dt-th-wt{width:80px}
+  .dt-table th.dt-th-mom{width:90px}
+  .dt-table tbody tr td{
+    background:var(--surface);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:5px 8px;vertical-align:middle;
+    transition:background .1s;
+  }
+  .dt-table tbody tr:hover td{background:#f6faf9}
+  .dt-table tbody tr td:first-child{
+    border-left:3px solid var(--teal);
+    border-radius:8px 0 0 8px;
+    padding-left:10px;
+    font-size:12px;font-weight:600;color:var(--text);
+  }
+  .dt-table tbody tr td:last-child{
+    border-right:1px solid var(--border);
+    border-radius:0 8px 8px 0;
+  }
+  .dt-arm{display:inline-block;font-size:10px;font-weight:500;color:var(--teal-dark);
+    background:var(--teal-bg);border-radius:4px;padding:1px 6px;
+    white-space:nowrap;font-variant-numeric:tabular-nums}
+  .dt-mom{font-size:11px;font-weight:600;color:var(--text-mid);text-align:right;
+    font-variant-numeric:tabular-nums}
+  .dt-mom.dim{color:var(--text-muted);font-weight:400}
+  .dt-inp{width:72px;height:26px;border:1.5px solid var(--border);border-radius:6px;
+    background:var(--surface);color:var(--text);font-size:12px;font-weight:700;
+    padding:0 6px;text-align:right;outline:none;font-family:inherit;
+    -moz-appearance:textfield;transition:border-color .1s,box-shadow .1s}
+  .dt-inp::-webkit-outer-spin-button,.dt-inp::-webkit-inner-spin-button{-webkit-appearance:none}
+  .dt-inp:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(15,149,128,.12);
+    background:var(--teal-bg)}
+  .dt-inp.over-weight{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
+  .dt-gal-inp{width:60px}
 
-.wt-chip-ok{background:rgba(110,231,183,0.25)!important;color:#6ee7b7!important}
-.wt-chip-warn{background:rgba(252,211,77,0.25)!important;color:#fcd34d!important}
-.wt-chip-over{background:rgba(252,165,165,0.25)!important;color:#fca5a5!important}
+  /* Door toggles in table */
+  .dt-door-wrap{display:flex;align-items:center;gap:6px}
+  .dt-door-toggle{display:flex;background:var(--border-light);border-radius:16px;padding:2px;gap:2px}
+  .dt-door-btn{font-size:9px;font-weight:600;padding:2px 7px;border-radius:12px;
+    cursor:pointer;border:none;font-family:inherit;background:transparent;
+    color:var(--text-muted);transition:all .1s;-webkit-appearance:none}
+  .dt-door-btn.active.on{background:var(--surface);color:var(--green);
+    box-shadow:0 1px 2px rgba(0,0,0,.1)}
+  .dt-door-btn.active.off{background:var(--surface);color:var(--red);
+    box-shadow:0 1px 2px rgba(0,0,0,.1)}
+
+  /* Fuel status in table */
+  .dt-fuel-status{font-size:10px;color:var(--text-muted);line-height:1.3}
+  .dt-fuel-cap{font-size:9px;color:var(--text-muted);margin-top:1px}
+
+  /* Totals bar */
+  .dt-totbar{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);
+    border-radius:8px;padding:8px 12px;display:flex;gap:24px;align-items:center;
+    margin-top:4px}
+  .dt-totbar-lbl{font-size:10px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.07em;color:var(--text-muted);margin-right:4px}
+  .dt-totbar-item{display:flex;flex-direction:column;gap:1px}
+  .dt-totbar-sublbl{font-size:9px;color:var(--text-muted)}
+  .dt-totbar-val{font-size:13px;font-weight:700;color:var(--text);
+    font-variant-numeric:tabular-nums}
+
+  /* ── Right panel ── */
+  .dt-panel{display:flex;flex-direction:column;gap:10px;position:sticky;top:100px}
+  .dt-lbar{border-radius:10px;padding:11px 14px;border:1px solid var(--border)}
+  .dt-lbar.ok{background:var(--teal-bg);border-color:var(--teal)}
+  .dt-lbar.warn{background:var(--red-bg);border-color:var(--red)}
+  .dt-lbar.neutral{background:var(--surface)}
+  .dt-lbar-title{font-size:12px;font-weight:700;margin-bottom:8px}
+  .dt-lbar.ok .dt-lbar-title{color:var(--teal-dark)}
+  .dt-lbar.warn .dt-lbar-title{color:var(--red)}
+  .dt-lbar.neutral .dt-lbar-title{color:var(--text-muted)}
+  .dt-lbar-row{display:flex;align-items:center;gap:6px;padding:2px 0;
+    font-size:11px;color:var(--text-mid)}
+  .dt-result-card{background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;padding:11px 14px}
+  .dt-result-title{font-size:9px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px}
+  .dt-result-row{display:flex;justify-content:space-between;align-items:baseline;
+    padding:4px 0;border-bottom:0.5px solid var(--border-light)}
+  .dt-result-row:last-child{border-bottom:none;padding-bottom:0}
+  .dt-result-lbl{font-size:11px;color:var(--text-muted)}
+  .dt-result-val{font-size:13px;font-weight:700;color:var(--text);
+    font-variant-numeric:tabular-nums}
+  .dt-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px}
+  .dt-badge.ok{background:var(--teal-bg);color:var(--teal-dark)}
+  .dt-badge.warn{background:var(--red-bg);color:var(--red)}
+  .dt-charts{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .dt-charts .chdr{padding:8px 12px}
+  .dt-charts .cbody{padding:8px}
+
+  /* Input is same class .inp but smaller on desktop */
+  .inp{width:72px;height:26px;font-size:12px;font-weight:700;padding:0 6px}
+  .inp:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(15,149,128,.12);background:var(--teal-bg)}
+  .inp[readonly]{cursor:default;opacity:.65}
+
+  /* Lbar hidden on desktop (replaced by dt-lbar) */
+  .lbar{display:none}
+
+  /* Modal */
+  .modal{max-width:420px;padding:24px}
+}
+
+/* ── Print ────────────────────────────────────────────────── */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:#fff!important}
+  .hdr{position:static!important;background:#1a2e4a!important;padding:12px 16px}
+  .hdr h1{color:#fff!important;font-size:14pt}
+  .hdr-sub{color:rgba(255,255,255,.6)!important}
+  .mf input{color:#fff!important;background:rgba(255,255,255,.15)!important;border-color:rgba(255,255,255,.2)!important}
+  .acft-section{background:#243b55!important}
+  .hbtn,.cbtn,.presets,.kp-overlay,.modal-overlay,.acft-edit-btn,.toast,.fuel-note{display:none!important}
+  .main{padding:8px 12px;max-width:100%}
+  .cards{display:block}
+  .card{break-inside:avoid;margin-bottom:4px;border:0.5px solid #ccc!important;box-shadow:none!important}
+  .card-top{padding:5px 10px}
+  .inp{background:#e8f2fd!important;color:#1a56a0!important;border:0.5px solid #1a56a0!important;height:24px;font-size:11px!important;padding:0 6px}
+  .card-moms{padding:4px 10px;background:#f8f9fa!important;border-top:0.5px solid #ddd!important}
+  .cgrid{grid-template-columns:1fr 1fr!important;gap:8px}
+  .ccard{border:0.5px solid #ccc!important;box-shadow:none!important;break-inside:avoid}
+  .chdr{background:#1a2e4a!important;padding:7px 10px}
+  .sgrid{display:none!important}
+  .tot-block,.lbar{break-inside:avoid;box-shadow:none!important}
+  @page{margin:1.2cm;size:A4 portrait}
+}
+
+/* ── Chart internals ─────────────────────────────────── */
+.ctitle{font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.07em}
+.ld{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle;flex-shrink:0}
+.ldsq{border-radius:2px}
+.cleg span{display:inline-flex;align-items:center;font-size:10px;color:var(--text-muted);margin-right:12px}
+
+/* ── Chart canvas wrapper ────────────────────────────── */
+.cbody{padding:10px 10px 6px}
+
+/* ── Neutral lbar (before any data) ─────────────────── */
+.lnt{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);font-size:11px;padding:10px 14px}
+
+/* ── Section label below header ─────────────────────── */
+.sec{font-size:11px;color:var(--text-muted);padding:8px 0 4px;font-weight:500}
+
+/* ── Footer bar ──────────────────────────────────────── */
+.foot{font-size:10px;color:var(--text-muted);text-align:center;padding:14px;border-top:1px solid var(--border-light);margin-top:8px}
+
+/* ── modal-field label fix ───────────────────────────── */
+.modal-field label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:4px}
 </style>
 
   
@@ -310,7 +500,7 @@ canvas{display:block;width:100%!important}
 <body>
 <div class="hdr">
   <div class="hdr-row">
-    <div><h1>Cabri G2 - Weight and Balance</h1><div class="hdr-sub">POH Issue 10.1 &nbsp;<span id="wt-chip" style="display:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;margin-left:6px;background:rgba(255,255,255,0.15);color:#fff"></span></div></div>
+    <div><h1>Cabri G2 &mdash; Weight &amp; Balance</h1><div class="hdr-sub">POH Issue 10.1 &nbsp;<span id="wt-chip" style="display:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;margin-left:6px;background:rgba(255,255,255,0.15);color:#fff"></span></div></div>
     <div class="btn-row">
       <button class="hbtn" id="sharebtn" onclick="doShare()">&#8679; Share</button>
       <button class="hbtn" onclick="doPrint()">Print/PDF</button>
@@ -374,14 +564,169 @@ canvas{display:block;width:100%!important}
   <div class="presets">
     <button class="preset-btn" onclick="applyPreset('solo')">&#9992; Solo</button>
     <button class="preset-btn" onclick="applyPreset('dual')">&#9992; Dual</button>
-    <button class="preset-btn" onclick="clearAll()">&#10005; Clear all</button>
+    <button class="preset-btn" onclick="clearAll()">&#10005; Clear All</button>
   </div>
+
+    <!-- DESKTOP TABLE LAYOUT -->
+    <div id="dt-layout" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start">
+
+        <!-- Left: W&B table -->
+        <div>
+          <div class="dt-section">
+            <div class="dt-section-title">Aircraft &amp; Occupants</div>
+            <table class="dt-table">
+              <thead><tr>
+                <th class="dt-th-item">Item</th>
+                <th class="dt-th-wt" style="text-align:right">Weight (lb)</th>
+                <th class="dt-th-arm">Long. Arm</th>
+                <th class="dt-th-mom" style="text-align:right">Long. Mom.</th>
+                <th class="dt-th-arm">Lat. Arm</th>
+                <th class="dt-th-mom" style="text-align:right">Lat. Mom.</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td>Empty Weight<br><span style="font-size:9px;color:var(--text-muted);font-weight:400">From current W&amp;B report</span></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w0" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><input class="dt-inp" id="dt-xa0" type="text" inputmode="decimal" placeholder="—" style="width:56px;text-align:center"></td>
+                  <td class="dt-mom dim" id="dt-lm0">—</td>
+                  <td style="text-align:center"><input class="dt-inp" id="dt-ya0" type="text" inputmode="decimal" placeholder="—" style="width:56px;text-align:center"></td>
+                  <td class="dt-mom dim" id="dt-ym0">—</td>
+                </tr>
+                <tr>
+                  <td>Pilot (right seat)</td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w1" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><span class="dt-arm">51.2</span></td>
+                  <td class="dt-mom dim" id="dt-lm1">—</td>
+                  <td style="text-align:center"><span class="dt-arm">+12.6</span></td>
+                  <td class="dt-mom dim" id="dt-ym1">—</td>
+                </tr>
+                <tr>
+                  <td>Passenger (left seat)</td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w2" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><span class="dt-arm">51.2</span></td>
+                  <td class="dt-mom dim" id="dt-lm2">—</td>
+                  <td style="text-align:center"><span class="dt-arm">−11.0</span></td>
+                  <td class="dt-mom dim" id="dt-ym2">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dt-section">
+            <div class="dt-section-title">Doors</div>
+            <table class="dt-table">
+              <tbody>
+                <tr>
+                  <td>Right door<br><span style="font-size:9px;color:var(--text-muted);font-weight:400">Arm 49.2 in · −6.8 lb if removed</span></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w3" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><span class="dt-arm">49.2</span></td>
+                  <td class="dt-mom dim" id="dt-lm3">—</td>
+                  <td style="text-align:center"><span class="dt-arm">+23.6</span></td>
+                  <td class="dt-mom dim" id="dt-ym3">—</td>
+                </tr>
+                <tr>
+                  <td>Left door<br><span style="font-size:9px;color:var(--text-muted);font-weight:400">Arm 49.2 in · −6.8 lb if removed</span></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w4" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><span class="dt-arm">49.2</span></td>
+                  <td class="dt-mom dim" id="dt-lm4">—</td>
+                  <td style="text-align:center"><span class="dt-arm">−23.6</span></td>
+                  <td class="dt-mom dim" id="dt-ym4">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dt-section">
+            <div class="dt-section-title">Baggage</div>
+            <table class="dt-table">
+              <tbody>
+                <tr>
+                  <td>Main luggage<br><span id="dt-bag-main-note" style="font-size:9px;color:var(--text-muted);font-weight:400">Max 88 lb</span></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w5" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><span class="dt-arm">73.0</span></td>
+                  <td class="dt-mom dim" id="dt-lm5">—</td>
+                  <td style="text-align:center"><span class="dt-arm">+12.7</span></td>
+                  <td class="dt-mom dim" id="dt-ym5">—</td>
+                </tr>
+                <tr>
+                  <td>Front luggage<br><span id="dt-bag-front-note" style="font-size:9px;color:var(--text-muted);font-weight:400">Max 11 lb</span></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w6" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td style="text-align:center"><span class="dt-arm">12.8</span></td>
+                  <td class="dt-mom dim" id="dt-lm6">—</td>
+                  <td style="text-align:center"><span class="dt-arm">0.0</span></td>
+                  <td class="dt-mom dim" id="dt-ym6">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dt-section">
+            <div class="dt-section-title">Fuel — enter total gallons in the matching band only</div>
+            <table class="dt-table">
+              <tbody>
+                <tr>
+                  <td>0–13 gal · arm 72.2 in<br><span id="dt-fuel-status-7" class="dt-fuel-status">Use for 0–13 gal on board</span><div id="dt-fuel-cap-7" class="dt-fuel-cap"></div></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w7" type="text" inputmode="decimal" placeholder="gal" style="width:62px"></td>
+                  <td style="text-align:center"><span class="dt-arm">72.2</span></td>
+                  <td class="dt-mom dim" id="dt-lm7">—</td>
+                  <td style="text-align:center"><span class="dt-arm">−12.3</span></td>
+                  <td class="dt-mom dim" id="dt-ym7">—</td>
+                </tr>
+                <tr>
+                  <td>13–40 gal · arm 74.2 in<br><span id="dt-fuel-status-8" class="dt-fuel-status">Use for 13–40 gal on board</span><div id="dt-fuel-cap-8" class="dt-fuel-cap"></div></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w8" type="text" inputmode="decimal" placeholder="gal" style="width:62px"></td>
+                  <td style="text-align:center"><span class="dt-arm">74.2</span></td>
+                  <td class="dt-mom dim" id="dt-lm8">—</td>
+                  <td style="text-align:center"><span class="dt-arm">−13.3</span></td>
+                  <td class="dt-mom dim" id="dt-ym8">—</td>
+                </tr>
+                <tr>
+                  <td>40–45 gal · arm 74.9 in<br><span id="dt-fuel-status-9" class="dt-fuel-status">Use for 40–45 gal on board</span><div id="dt-fuel-cap-9" class="dt-fuel-cap"></div></td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w9" type="text" inputmode="decimal" placeholder="gal" style="width:62px"></td>
+                  <td style="text-align:center"><span class="dt-arm">74.9</span></td>
+                  <td class="dt-mom dim" id="dt-lm9">—</td>
+                  <td style="text-align:center"><span class="dt-arm">−13.5</span></td>
+                  <td class="dt-mom dim" id="dt-ym9">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dt-totbar" id="dt-totbar" style="display:none">
+            <span class="dt-totbar-lbl">Totals</span>
+            <div class="dt-totbar-item"><div class="dt-totbar-sublbl">Weight</div><div class="dt-totbar-val" id="dt-t-tw">—</div></div>
+            <div class="dt-totbar-item"><div class="dt-totbar-sublbl">Long. C.G.</div><div class="dt-totbar-val" id="dt-t-tx">—</div></div>
+            <div class="dt-totbar-item"><div class="dt-totbar-sublbl">Lat. C.G.</div><div class="dt-totbar-val" id="dt-t-ty">—</div></div>
+            <div class="dt-totbar-item"><div class="dt-totbar-sublbl">ZF Weight</div><div class="dt-totbar-val" id="dt-t-zw">—</div></div>
+            <div class="dt-totbar-item"><div class="dt-totbar-sublbl">ZF Long. C.G.</div><div class="dt-totbar-val" id="dt-t-zx">—</div></div>
+          </div>
+        </div>
+
+        <!-- Right panel -->
+        <div class="dt-panel">
+          <div class="dt-lbar neutral" id="dt-lbar"><div class="dt-lbar-title" style="color:var(--text-muted)">Enter weights to see results</div></div>
+          <div class="dt-result-card" id="dt-result-card" style="display:none">
+            <div class="dt-result-title">Results</div>
+            <div class="dt-result-row"><span class="dt-result-lbl">Takeoff weight</span><span class="dt-result-val" id="dt-sv-tw">—</span></div>
+            <div class="dt-result-row"><span class="dt-result-lbl">Long. C.G.</span><span class="dt-result-val">— <span class="dt-badge" id="dt-ss-lx"></span></span></div>
+            <div class="dt-result-row"><span class="dt-result-lbl">Lat. C.G.</span><span class="dt-result-val">— <span class="dt-badge" id="dt-ss-ly"></span></span></div>
+            <div class="dt-result-row"><span class="dt-result-lbl">Zero fuel weight</span><span class="dt-result-val" id="dt-sv-zw">—</span></div>
+          </div>
+          <div class="dt-charts">
+            <div class="chdr"><span class="ctitle">Long. Envelope</span><span class="cst cnt" id="dt-lst">—</span></div>
+            <div class="cbody"><canvas id="dt-lc" height="200"></canvas></div>
+            <div class="chdr" style="border-top:1px solid rgba(255,255,255,.1)"><span class="ctitle">Lat. Envelope</span><span class="cst cnt" id="dt-rst">—</span></div>
+            <div class="cbody"><canvas id="dt-rc" height="160"></canvas></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- END DESKTOP LAYOUT -->
+
   
   <div class="cards">
     <div class="grp-label">Aircraft</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Empty Weight</div><div class="card-note">From aircraft W&amp;B report</div><div class="card-arms">Long. &amp; Lat. Arms: from W&amp;B report</div></div>
+        <div class="card-info"><div class="card-name">Empty Weight</div><div class="card-note">From aircraft W&amp;B report — enter weight, long. arm and lat. arm</div><div class="card-arms">Long. &amp; Lat. Arms: from W&amp;B report</div></div>
         <div class="card-inputs">
           <div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w0" type="text" placeholder="-" inputmode="decimal"></div>
           <div class="inp-grp"><div class="inp-lbl">Long. Arm</div><input class="inp" id="xa0" type="text" placeholder="-" inputmode="decimal" style="width:64px;font-size:13px"></div>
@@ -427,37 +772,47 @@ canvas{display:block;width:100%!important}
     <div class="grp-label">Baggage</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Main luggage compartment</div><div class="card-note" id="bag-main-note">Max 88 lb — must comply with C.G. limits</div><div class="card-arms">Long. Arm: 73.0 in | Lat. Arm: +12.7 in</div></div>
+        <div class="card-info"><div class="card-name">Main luggage</div><div class="card-note" id="bag-main-note">Max 88 lb — must comply with C.G. limits</div><div class="card-arms">Long. Arm: 73.0 in | Lat. Arm: +12.7 in</div></div>
         <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w5" type="text" placeholder="-" inputmode="decimal"></div></div>
       </div>
       <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm5">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym5">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Front luggage compartment</div><div class="card-note" id="bag-front-note">Max 11 lb — must comply with C.G. limits</div><div class="card-arms">Long. Arm: 12.8 in | Lat. Arm: 0.0 in</div></div>
+        <div class="card-info"><div class="card-name">Front luggage</div><div class="card-note" id="bag-front-note">Max 11 lb — must comply with C.G. limits</div><div class="card-arms">Long. Arm: 12.8 in | Lat. Arm: 0.0 in</div></div>
         <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w6" type="text" placeholder="-" inputmode="decimal"></div></div>
       </div>
       <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm6">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym6">-</div></div></div>
     </div>
     
+    <div class="fuel-note">
+      <div class="fuel-note-title">Fuel Band Selection</div>
+      <div class="fuel-note-body">Enter your total gallons on board in the matching band.</div>
+      <div class="fuel-note-bands">
+        <span class="fnb">0–13 gal → Band 1</span>
+        <span class="fnb">13–40 gal → Band 2</span>
+        <span class="fnb">40–45 gal → Band 3</span>
+      </div>
+      <div class="fuel-note-sub">(One band only as the POH arm is pre-averaged for each range. Entering a value clears the other bands.)</div>
+    </div>
     <div class="grp-label">Fuel</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Fuel 0–13 gal</div><div class="card-note"><span id="fuel-status-7">Max 13 gal (78 lb max)</span></div><div class="card-arms">Long. Arm: 72.2 in | Lat. Arm: -12.3 in</div></div>
+        <div class="card-info"><div class="card-name">Fuel 0–13 gal</div><div class="card-note"><span id="fuel-status-7">Use for 0–13 gal on board</span><div id="fuel-cap-7" class="fuel-cap"></div></div><div class="card-arms">Long. Arm: 72.2 in | Lat. Arm: -12.3 in</div></div>
         <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w7" type="text" placeholder="-" inputmode="decimal"></div></div>
       </div>
       <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val" id="fw7">-</div></div><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm7">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym7">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Fuel 13½–40 gal</div><div class="card-note"><span id="fuel-status-8">Max 40 gal (240 lb max)</span></div><div class="card-arms">Long. Arm: 74.2 in | Lat. Arm: -13.3 in</div></div>
+        <div class="card-info"><div class="card-name">Fuel 13–40 gal</div><div class="card-note"><span id="fuel-status-8">Use for 13–40 gal on board</span><div id="fuel-cap-8" class="fuel-cap"></div></div><div class="card-arms">Long. Arm: 74.2 in | Lat. Arm: -13.3 in</div></div>
         <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w8" type="text" placeholder="-" inputmode="decimal"></div></div>
       </div>
       <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val" id="fw8">-</div></div><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm8">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym8">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Fuel 40½–45 gal</div><div class="card-note"><span id="fuel-status-9">Max 45 gal (270 lb max)</span></div><div class="card-arms">Long. Arm: 74.9 in | Lat. Arm: -13.5 in</div></div>
+        <div class="card-info"><div class="card-name">Fuel 40–45 gal</div><div class="card-note"><span id="fuel-status-9">Use for 40–45 gal on board</span><div id="fuel-cap-9" class="fuel-cap"></div></div><div class="card-arms">Long. Arm: 74.9 in | Lat. Arm: -13.5 in</div></div>
         <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w9" type="text" placeholder="-" inputmode="decimal"></div></div>
       </div>
       <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val" id="fw9">-</div></div><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm9">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym9">-</div></div></div>
@@ -477,10 +832,10 @@ canvas{display:block;width:100%!important}
   </div>
   <div class="sec" style="margin-top:16px">C.G. Envelopes - POH Section 2</div>
   <div class="cgrid">
-    <div class="ccard"><div class="chdr"><span class="ctitle">Longitudinal C.G. Envelope</span><span class="cst cnt" id="lst">-</span></div><canvas id="lc" height="220"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div>
-    <div class="ccard"><div class="chdr"><span class="ctitle">Lateral C.G. Envelope</span><span class="cst cnt" id="rst">-</span></div><canvas id="rc" height="220"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div>
+    <div class="ccard"><div class="chdr"><span class="ctitle">Longitudinal C.G. Envelope</span><span class="cst cnt" id="lst">-</span></div><div class="cbody"><canvas id="lc" height="240"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div></div>
+    <div class="ccard"><div class="chdr"><span class="ctitle">Lateral C.G. Envelope</span><span class="cst cnt" id="rst">-</span></div><div class="cbody"><canvas id="rc" height="240"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div></div>
   </div>
-  <div class="foot">Moment = Weight x Arm &nbsp;|&nbsp; CG = Total Moment / Total Weight<br>Limits: Max 1,543 lb &nbsp;|&nbsp; Long. CG 75.4-83.5 in &nbsp;|&nbsp; Lat. C.G. +/-3.1 in<br><strong>For reference only - verify with current POH and aircraft W&amp;B report</strong></div>
+  <div class="foot">Moment = Weight &times; Arm &nbsp;&middot;&nbsp; C.G. = &Sigma; Moment &divide; &Sigma; Weight &nbsp;&middot;&nbsp; Limits: 1,543 lb &nbsp;|&nbsp; Long. 75.4&ndash;83.5 in &nbsp;|&nbsp; Lat. &plusmn;3.1 in<br><em>For planning reference only &mdash; always verify with current POH and aircraft W&amp;B report before flight</em></div>
 </div>
 <script>
 const XCG=[null,51.2,51.2,49.2,49.2,73.0,12.8,72.2,74.2,74.9];
@@ -492,6 +847,17 @@ function g(id){return document.getElementById(id);}
 function gv(id){var e=g(id);if(!e||e.value.trim()===''||e.value.trim()==='-')return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
 function fmt(v,d){return v!==null?v.toFixed(d):'-';}
 function recalc(){
+  // Enforce one fuel band at a time: keep the last non-empty fuel field, clear others
+  var fuelIds=['w7','w8','w9'];
+  var filledFuel=fuelIds.filter(function(id){var e=g(id);return e&&e.value.trim()!=='';});
+  if(filledFuel.length>1){
+    // Keep the last one in INPUT_ORDER that has a value (most recently active)
+    // Use the one that was most recently changed - heuristic: keep highest index
+    var keepId=filledFuel[filledFuel.length-1];
+    filledFuel.forEach(function(id){
+      if(id!==keepId){var e=g(id);if(e)e.value='';}
+    });
+  }
   var tw=0,tlm=0,tym=0,zw=0,zlm=0,zym=0,any=false;
   for(var i=0;i<10;i++){
     var raw=gv('w'+i);
@@ -516,67 +882,6 @@ function recalc(){
       if(wEl)wEl.textContent=w.toFixed(1)+' lb';
     }
   }
-  // Live fuel status — runs after loop so tw is the final total weight
-  // Helper: max gallons for band fi that keep weight+CG in limits
-  // Returns {gal, reason} - max safe fuel keeping BOTH weight AND CG within limits
-  function maxSafeFuelGal(fi, currentGal){
-    var fuelXcg=[0,0,0,0,0,0,0,72.2,74.2,74.9][fi];
-    var bandMax=[0,0,0,0,0,0,0,13.0,40.0,45.0][fi];
-    // Leave 0.5 lb margin below max gross so rounding never tips over
-    var lbRoom=Math.max(0,1542.5-tw);
-    var galByWeight=Math.floor(Math.min(lbRoom/6, bandMax-(currentGal||0))*10)/10;
-    if(galByWeight<=0)return {gal:0,reason:'weight'};
-    // Walk down checking BOTH weight limit and CG envelope
-    for(var g2=galByWeight;g2>=0;g2=parseFloat((g2-0.1).toFixed(1))){
-      var addLb=g2*6;
-      var testWt=tw+addLb;
-      var testTlm=tlm+addLb*fuelXcg;
-      if(testWt>0&&testWt<=1543&&inPoly(testTlm/testWt,testWt)){
-        var isWtLimited=(galByWeight===g2);
-        return {gal:g2,reason:isWtLimited?'weight':'cg'};
-      }
-    }
-    return {gal:0,reason:'cg'};
-  }
-
-  [7,8,9].forEach(function(fi){
-    var rawF=gv('w'+fi);
-    var stEl=g('fuel-status-'+fi);
-    if(!stEl)return;
-    var bandMax=[0,0,0,0,0,0,0,13.0,40.0,45.0][fi];
-    var lbLeft=Math.max(0,1543-tw);
-    var galLeft=parseFloat((lbLeft/6).toFixed(1));
-    if(rawF===null){
-      // No fuel entered — how much can we safely add?
-      var safe=maxSafeFuelGal(fi,0);
-      var galFits=safe.gal, lbFits=parseFloat((galFits*6).toFixed(1));
-      var limitNote=safe.reason==='cg'?' — C.G. limited':'';
-      if(galFits<=0){
-        stEl.innerHTML='<span style="color:var(--red);font-weight:600">No capacity — at/over limits</span>';
-      } else {
-        stEl.innerHTML='Max '+bandMax+' gal <span style="color:var(--text-muted);font-size:10px">('+galFits+' gal / '+lbFits+' lb fits'+limitNote+')</span>';
-      }
-    } else {
-      var entGal=rawF;
-      var fuelInpEl=g('w'+fi);
-      if(fuelInpEl){if(entGal>bandMax)fuelInpEl.classList.add('over-weight');else fuelInpEl.classList.remove('over-weight');}
-      var bandRem=parseFloat((bandMax-entGal).toFixed(1));
-      // How much more can we safely add?
-      var safe2=maxSafeFuelGal(fi,entGal);
-      var galMore=safe2.gal, lbMore=parseFloat((galMore*6).toFixed(1));
-      var limitNote2=safe2.reason==='cg'?' — C.G. limited':'';
-      if(entGal>bandMax){
-        if(fuelInpEl)fuelInpEl.classList.add('over-weight');
-        stEl.innerHTML='<span style="color:var(--red);font-weight:700">&#10007; Over band max by '+(entGal-bandMax).toFixed(1)+' gal</span>';
-      } else if(bandRem<=0){
-        stEl.innerHTML='<span style="color:var(--green);font-weight:600">&#10003; Band full</span>';
-      } else if(galMore<=0){
-        stEl.innerHTML='<span style="color:var(--amber,#d97706);font-weight:600">&#9888; C.G. limit — no more fuel fits</span>';
-      } else {
-        stEl.innerHTML=bandRem+' gal left in band <span style="color:var(--text-muted);font-size:10px">('+galMore+' gal / '+lbMore+' lb fits'+limitNote2+')</span>';
-      }
-    }
-  });
   var to_x=(tw&&!isNaN(tlm))?tlm/tw:null,to_y=(tw&&!isNaN(tym))?tym/tw:null;
   var zf_x=zw?zlm/zw:null,zf_y=zw?zym/zw:null;
   if(!any){
@@ -644,17 +949,118 @@ function recalc(){
     '<div class=lbar-item>Lat. C.G.: '+fmt(zf_y,3)+' in &nbsp;'+(zfYok?'&#10003;':'&#10007; outside ±3.1 in')+'</div></div>';
   // ST for charts
   ST.to_x=to_x;ST.to_w=tw||null;ST.zf_x=zf_x;ST.zf_w=zw||null;ST.to_y=to_y;ST.zf_y=zf_y;
+  // Fuel band status (runs after yOk/ZF so lateral check is accurate)
+  // Helper: max gallons for band fi that keep weight+CG in limits
+  // Returns {gal, reason} - max safe fuel keeping BOTH weight AND CG within limits
+  function maxSafeFuelGal(fi, currentGal){
+    var fuelXcg=[0,0,0,0,0,0,0,72.2,74.2,74.9][fi];
+    var fuelYcg=[0,0,0,0,0,0,0,-12.3,-13.3,-13.5][fi];
+    var bandMax=[0,0,0,0,0,0,0,13.0,40.0,45.0][fi];
+    var lbRoom=Math.max(0,1542.5-tw);
+    var galByWeight=Math.floor(Math.min(lbRoom/6, bandMax-(currentGal||0))*10)/10;
+    if(galByWeight<=0)return {gal:0,reason:'weight'};
+    for(var g2=galByWeight;g2>=0;g2=parseFloat((g2-0.1).toFixed(1))){
+      var addLb=g2*6;
+      var testWt=tw+addLb;
+      var testTlm=tlm+addLb*fuelXcg;
+      var testTym=tym+addLb*fuelYcg;
+      var longOk=testWt>0&&testWt<=1543&&inPoly(testTlm/testWt,testWt);
+      var latOk=(testTym/testWt)>=-3.1&&(testTym/testWt)<=3.1;
+      if(longOk&&latOk){
+        var isWtLimited=(galByWeight===g2);
+        return {gal:g2,reason:isWtLimited?'weight':'cg'};
+      }
+    }
+    return {gal:0,reason:'cg'};
+  }
+
+  [7,8,9].forEach(function(fi){
+    var rawF=gv('w'+fi);
+    var stEl=g('fuel-status-'+fi);
+    var capEl=g('fuel-cap-'+fi);
+    if(!stEl)return;
+    var bandMax=[0,0,0,0,0,0,0,13.0,40.0,45.0][fi];
+    var bandMin=[0,0,0,0,0,0,0,0,13.0,40.0][fi];
+    var bandLabel=['','','','','','','','​0–13','​13–40','​40–45'][fi];
+    var fuelInpEl=g('w'+fi);
+
+    if(rawF===null){
+      if(fuelInpEl)fuelInpEl.classList.remove('over-weight');
+      stEl.innerHTML='Use for '+bandLabel+' gal on board';
+      if(capEl){
+        if(!yOk&&tw>0){
+          capEl.innerHTML='<span style="color:var(--red)">&#9888; Lat. C.G. out of limits — reduce lateral imbalance first</span>';
+        } else if(tw>0){
+          var safe=maxSafeFuelGal(fi,0);
+          var galFits=safe.gal, lbFits=parseFloat((galFits*6).toFixed(1));
+          var reasonNote=safe.reason==='cg'?' — C.G. limited':'';
+          if(galFits<=0){
+            var noCapMsg=safe.reason==='cg'
+              ?'⚠ Long. C.G. out of envelope — adjust other weights first'
+              :'⚠ No weight capacity — at max gross weight';
+            capEl.innerHTML='<span style="color:var(--red)">'+noCapMsg+'</span>';
+          } else {
+            capEl.innerHTML='Can fit: '+galFits+' gal / '+lbFits+' lb'+reasonNote;
+          }
+        } else {
+          capEl.innerHTML='';
+        }
+      }
+    } else {
+      var entGal=rawF;
+      var belowMin=bandMin>0&&entGal<bandMin;
+      var aboveMax=entGal>bandMax;
+      if(fuelInpEl){
+        if(aboveMax||belowMin)fuelInpEl.classList.add('over-weight');
+        else fuelInpEl.classList.remove('over-weight');
+      }
+
+      if(aboveMax){
+        stEl.innerHTML='<span style="color:var(--red);font-weight:700">&#10007; '+entGal+' gal exceeds band max of '+bandMax+' gal</span>';
+        if(capEl)capEl.innerHTML='';
+      } else if(belowMin){
+        stEl.innerHTML='<span style="color:var(--amber,#d97706);font-weight:700">&#9888; '+entGal+' gal is below this band range</span>';
+        if(capEl)capEl.innerHTML='Enter '+bandMin+' to '+bandMax+' gal for this band';
+      } else {
+        // Valid entry — check if at band max or within band
+        var atBandMax=parseFloat(entGal.toFixed(1))>=bandMax;
+        stEl.innerHTML='<span style="color:var(--green);font-weight:600">'+entGal+' gal — in range</span>';
+        if(capEl){
+          if(!yOk){
+            capEl.innerHTML='<span style="color:var(--red)">&#9888; Lat. C.G. out of limits — reduce lateral imbalance</span>';
+          } else if(atBandMax){
+            capEl.innerHTML='<span style="color:var(--green);font-weight:600">✓ At band capacity ('+bandMax+' gal)</span>';
+          } else {
+            var safe2=maxSafeFuelGal(fi,entGal);
+            var galMore=safe2.gal, lbMore=parseFloat((galMore*6).toFixed(1));
+            var reasonNote2=safe2.reason==='cg'?' — C.G. limited':safe2.reason==='weight'&&galMore>0?'':' — weight limit';
+            if(safe2.gal<=0){
+              var limitMsg=safe2.reason==='cg'
+                ?'⚠ Long. C.G. limit — no more fuel without exceeding envelope'
+                :'⚠ At max gross weight — no more fuel';
+              capEl.innerHTML='<span style="color:var(--amber,#d97706)">'+limitMsg+'</span>';
+            } else {
+              capEl.innerHTML='Can add: '+galMore+' more gal / '+lbMore+' lb'+reasonNote2;
+            }
+          }
+        }
+      }
+    }
+  });
+
+
   redraw();
   // Weight remaining chip in header
   (function(){
     var chip=g('wt-chip');if(!chip)return;
     var rem=1543-tw;
     chip.style.display='';
-    if(rem<0){chip.textContent='OVER '+(Math.abs(rem).toFixed(1))+' lb';chip.className='wt-chip-over';}
-    else if(rem<50){chip.textContent='+'+rem.toFixed(1)+' lb';chip.className='wt-chip-warn';}
-    else{chip.textContent='+'+rem.toFixed(1)+' lb';chip.className='wt-chip-ok';}
+    if(rem<0){chip.textContent='OVER by '+Math.abs(rem).toFixed(1)+' lb';chip.className='wt-chip-over';}
+    else if(rem<50){chip.textContent='+'+Math.round(rem)+' lb';chip.className='wt-chip-warn';}
+    else{chip.textContent='+'+Math.round(rem)+' lb';chip.className='wt-chip-ok';}
   })();
 }
+  if(isDesktop)dtUpdate();
 function setSt(id,t,c){var e=g(id);e.textContent=t;e.className='cst '+c;}
 
 function sCard(v,s2,val,unit,hint,type,status){
@@ -683,6 +1089,183 @@ function showToast(msg){
   setTimeout(function(){t.classList.remove('show');},2500);
 }
 
+
+// ── Fuel auto-clear (one band at a time per POH) ─────────────────────
+function wireFuelClear(){
+  [[7,[8,9]],[8,[7,9]],[9,[7,8]]].forEach(function(pair){
+    var mainId='w'+pair[0], otherIds=pair[1].map(function(n){return 'w'+n;});
+    var el=g(mainId);
+    if(!el)return;
+    el.addEventListener('input',function(){
+      if(el.value.trim()!==''){
+        otherIds.forEach(function(id){
+          var other=g(id);
+          if(other&&other.value.trim()!==''){
+            other.value='';
+            other.dispatchEvent(new Event('input'));
+          }
+        });
+      }
+    });
+  });
+}
+
+// ── Desktop layout wiring ─────────────────────────────────────────────────────
+function wireDesktop(){
+  if(!isDesktop)return;
+  // Show desktop layout, hide nothing (mobile .cards already display:none via CSS)
+  var dtl=g('dt-layout');
+  if(dtl)dtl.style.display='';
+
+  // Sync dt-inputs → mobile inputs on each input event
+  var dtPairs=[
+    ['dt-w0','w0'],['dt-xa0','xa0'],['dt-ya0','ya0'],
+    ['dt-w1','w1'],['dt-w2','w2'],['dt-w3','w3'],['dt-w4','w4'],
+    ['dt-w5','w5'],['dt-w6','w6'],['dt-w7','w7'],['dt-w8','w8'],['dt-w9','w9']
+  ];
+  dtPairs.forEach(function(pair){
+    var dtEl=g(pair[0]), mobEl=g(pair[1]);
+    if(!dtEl||!mobEl)return;
+    dtEl.addEventListener('input',function(){
+      mobEl.value=dtEl.value;
+      mobEl.dispatchEvent(new Event('input'));
+    });
+    // Enter key advances to next dt-input
+    dtEl.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.keyCode===13){
+        e.preventDefault();
+        var idx=dtPairs.findIndex(function(p){return p[0]===dtEl.id;});
+        if(idx>=0&&idx<dtPairs.length-1){
+          var next=g(dtPairs[idx+1][0]);
+          if(next){next.focus();next.select();}
+        }
+      }
+    });
+    dtEl.addEventListener('focus',function(){setTimeout(function(){dtEl.select();},10);});
+  });
+
+  // Fuel clear: when a dt-fuel input is filled, clear the other two dt-fuel inputs
+  var dtFuels=['dt-w7','dt-w8','dt-w9'];
+  dtFuels.forEach(function(id){
+    var el=g(id);
+    if(!el)return;
+    el.addEventListener('input',function(){
+      if(el.value.trim()!==''){
+        dtFuels.forEach(function(oid){
+          if(oid!==id){var o=g(oid);if(o&&o.value.trim()!=='')o.value='';}
+        });
+      }
+    });
+  });
+}
+
+// Mirror recalc outputs to desktop display elements
+function dtUpdate(){
+  if(!isDesktop)return;
+  var pairs=[
+    ['lm0','dt-lm0'],['ym0','dt-ym0'],
+    ['lm1','dt-lm1'],['ym1','dt-ym1'],
+    ['lm2','dt-lm2'],['ym2','dt-ym2'],
+    ['lm3','dt-lm3'],['ym3','dt-ym3'],
+    ['lm4','dt-lm4'],['ym4','dt-ym4'],
+    ['lm5','dt-lm5'],['ym5','dt-ym5'],
+    ['lm6','dt-lm6'],['ym6','dt-ym6'],
+    ['lm7','dt-lm7'],['ym7','dt-ym7'],
+    ['lm8','dt-lm8'],['ym8','dt-ym8'],
+    ['lm9','dt-lm9'],['ym9','dt-ym9'],
+    ['fw7','dt-fw7'],['fw8','dt-fw8'],['fw9','dt-fw9'],
+  ];
+  pairs.forEach(function(p){
+    var src=g(p[0]),dst=g(p[1]);
+    if(src&&dst){
+      var txt=src.textContent;
+      dst.textContent=txt;
+      // Color dim if dash
+      if(dst.classList){
+        if(txt==='-'||txt===''){dst.classList.add('dim');}
+        else{dst.classList.remove('dim');}
+      }
+    }
+  });
+
+  // Mirror over-weight class to dt-inputs
+  [0,1,2,3,4,5,6,7,8,9].forEach(function(i){
+    var mob=g('w'+i),dt=g('dt-w'+i);
+    if(mob&&dt){
+      if(mob.classList.contains('over-weight'))dt.classList.add('over-weight');
+      else dt.classList.remove('over-weight');
+    }
+  });
+
+  // Mirror totblock values
+  var totVisible=g('totblock')&&g('totblock').style.display!=='none';
+  var dtTotbar=g('dt-totbar');
+  if(dtTotbar){
+    if(totVisible){
+      dtTotbar.style.display='';
+      ['tw','tx','ty','zw','zx'].forEach(function(k){
+        var src=g('t-'+k),dst=g('dt-t-'+k);
+        if(src&&dst)dst.textContent=src.textContent;
+      });
+    } else {
+      dtTotbar.style.display='none';
+    }
+  }
+
+  // Mirror stat cards
+  var resultCard=g('dt-result-card');
+  var sgridVisible=g('sgrid')&&g('sgrid').style.display!=='none';
+  if(resultCard){
+    resultCard.style.display=sgridVisible?'':'none';
+    if(sgridVisible){
+      ['sv-tw','sv-lx','sv-ly','sv-zw'].forEach(function(k){
+        var src=g(k),dst=g('dt-'+k);
+        if(src&&dst)dst.innerHTML=src.innerHTML;
+      });
+      ['ss-lx','ss-ly'].forEach(function(k){
+        var src=g(k),dst=g('dt-'+k);
+        if(src&&dst){
+          dst.textContent=src.textContent;
+          dst.className='dt-badge '+(src.classList.contains('sok')?'ok':src.classList.contains('swn')?'warn':'');
+        }
+      });
+    }
+  }
+
+  // Mirror limit bar state to dt-lbar
+  var dtLbar=g('dt-lbar');
+  var mobLbar=g('lbar');
+  if(dtLbar&&mobLbar){
+    var isOk=mobLbar.classList.contains('lok');
+    var isWarn=mobLbar.classList.contains('lwn');
+    dtLbar.className='dt-lbar '+(isOk?'ok':isWarn?'warn':'neutral');
+    dtLbar.innerHTML=mobLbar.innerHTML;
+  }
+
+  // Mirror chart badges
+  ['lst','rst'].forEach(function(k){
+    var src=g(k),dst=g('dt-'+k);
+    if(src&&dst){dst.textContent=src.textContent;dst.className=src.className;}
+  });
+
+  // Mirror fuel status and cap
+  [7,8,9].forEach(function(fi){
+    ['fuel-status-','fuel-cap-'].forEach(function(prefix){
+      var src=g(prefix+fi),dst=g('dt-'+prefix+fi);
+      if(src&&dst)dst.innerHTML=src.innerHTML;
+    });
+    // Baggage notes
+    ['bag-main-note','bag-front-note'].forEach(function(id){
+      var src=g(id),dst=g('dt-'+id);
+      if(src&&dst)dst.innerHTML=src.innerHTML;
+    });
+  });
+
+  // Draw desktop charts (separate canvases, same data)
+  var dtLc=g('dt-lc'),dtRc=g('dt-rc');
+  if(dtLc)drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w,dtLc,200);
+  if(dtRc)drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y,dtRc,160);
+}
 
 // ── Aircraft presets (localStorage) ────────────────────────────────────────
 function getSavedAircraft(){
@@ -939,9 +1522,9 @@ g('sharebtn').style.display='';
 function mv(v,d0,d1,p0,p1){return p0+(v-d0)/(d1-d0)*(p1-p0);}
 function dk(){return window.matchMedia('(prefers-color-scheme:dark)').matches;}
 
-function drawLong(to_x,to_w,zf_x,zf_w){
-  var cv=g('lc'),dpr=Math.min(window.devicePixelRatio||1,3);
-  var W=cv.parentElement.clientWidth||320,H=220;
+function drawLong(to_x,to_w,zf_x,zf_w,cvOpt,hOpt){
+  var cv=cvOpt||g('lc'),dpr=Math.min(window.devicePixelRatio||1,3);
+  var W=cv.parentElement.clientWidth||320,H=hOpt||220;
   cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
   var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
   var ml=46,mr=12,mt=14,mb=34,pw=W-ml-mr,ph=H-mt-mb;
@@ -977,9 +1560,9 @@ function drawLong(to_x,to_w,zf_x,zf_w){
   if(to_x!==null&&to_w){var x2=px(to_x),y2=py(to_w);ctx.beginPath();ctx.arc(x2,y2,R,0,Math.PI*2);ctx.fillStyle='#007a38';ctx.fill();ctx.strokeStyle='#004d22';ctx.lineWidth=1.3;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('TO',x2,y2);ctx.textBaseline='alphabetic';}
 }
 
-function drawLat(to_x,to_y,zf_x,zf_y){
-  var cv=g('rc'),dpr=Math.min(window.devicePixelRatio||1,3);
-  var W=cv.parentElement.clientWidth||320,H=220;
+function drawLat(to_x,to_y,zf_x,zf_y,cvOpt,hOpt){
+  var cv=cvOpt||g('rc'),dpr=Math.min(window.devicePixelRatio||1,3);
+  var W=cv.parentElement.clientWidth||320,H=hOpt||220;
   cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
   var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
   var ml=36,mr=14,mt=16,mb=34,pw=W-ml-mr,ph=H-mt-mb;
@@ -1009,7 +1592,15 @@ function drawLat(to_x,to_y,zf_x,zf_y){
   if(to_x!==null&&to_y!==null){var x2=px(to_x),y2=py(to_y);ctx.beginPath();ctx.arc(x2,y2,R,0,Math.PI*2);ctx.fillStyle='#007a38';ctx.fill();ctx.strokeStyle='#004d22';ctx.lineWidth=1.3;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('TO',x2,y2);ctx.textBaseline='alphabetic';}
 }
 
-function redraw(){drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w);drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y);}
+function redraw(){
+  drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w);
+  drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y);
+  if(isDesktop){
+    var dtLc=g('dt-lc'),dtRc=g('dt-rc');
+    if(dtLc)drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w,dtLc,200);
+    if(dtRc)drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y,dtRc,160);
+  }
+}
 
 var MODAL_ORDER=['m-ew','m-xa','m-ya'];
 var kpTarget=null,kpVal='';
@@ -1056,6 +1647,13 @@ function kpClose(e){
   if(kpTarget){
     kpTarget.value=kpVal||'';
     kpTarget.removeAttribute('readonly');
+    // If a fuel band was entered, clear the other two
+    var fuelBands=['w7','w8','w9'];
+    if(kpTarget.id&&fuelBands.indexOf(kpTarget.id)>=0&&kpTarget.value.trim()!==''){
+      fuelBands.forEach(function(fid){
+        if(fid!==kpTarget.id){var fo=g(fid);if(fo&&fo.value.trim()!==''){fo.value='';fo.dispatchEvent(new Event('input'));}}
+      });
+    }
     var isModal=kpTarget.id&&MODAL_ORDER.indexOf(kpTarget.id)>=0;
     if(!isModal)recalc();
     kpTarget=null;
@@ -1160,7 +1758,9 @@ redraw();
 
 
 populateAcftSelect();
+wireFuelClear();
 wireModalInputs();
+wireDesktop();
 (function(){
   var dt=g('dt');
   if(dt&&!dt.value){
