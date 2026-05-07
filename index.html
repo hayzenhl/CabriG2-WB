@@ -1331,7 +1331,8 @@ function recalc(){
   var zfWok=zw<=1543,zfInP=zf_x!==null&&inPoly(zf_x,zw),zfYok=zf_y!==null&&zf_y>=-3.1&&zf_y<=3.1;
   var hasFuel=FUEL.some(function(fi){return gv('w'+fi)!==null;});
   var all=wOk&&inP&&yOk;
-  var allZf=hasFuel?(zfWok&&zfInP&&zfYok):true;
+  var zfInRange=zw>=1036;
+  var allZf=hasFuel?(zfWok&&(!zfInRange||zfInP)&&zfYok):true;
   // Badge reflects takeoff CG (consistent with stat card display)
   var lstOk=inP;
   var rstOk=yOk;
@@ -1347,7 +1348,7 @@ function recalc(){
     '<div class=lbar-item>Lat. C.G.: '+fmt(to_y,3)+' in &nbsp;'+(yOk?'&#10003;':'&#10007; outside ±3.1 in')+'</div></div>'+
     '<div class=lbar-section><div class=lbar-section-title>Zero Fuel</div>'+
     '<div class=lbar-item>Weight: '+fmt(zw,1)+' lb &nbsp;'+(zfWok?'&#10003;':'&#10007; exceeds 1,543 lb')+'</div>'+
-    '<div class=lbar-item>Long. C.G.: '+fmt(zf_x,3)+' in &nbsp;'+(zfInP?'&#10003;':'&#10007; outside envelope')+'</div>'+
+    '<div class=lbar-item>Long. C.G.: '+fmt(zf_x,3)+' in &nbsp;'+(zfInRange?(zfInP?'&#10003;':'&#10007; outside envelope'):'&#10003; (below envelope range)')+'</div>'+
     '<div class=lbar-item>Lat. C.G.: '+fmt(zf_y,3)+' in &nbsp;'+(zfYok?'&#10003;':'&#10007; outside ±3.1 in')+'</div></div>';
   // ST for charts
   ST.to_x=to_x;ST.to_w=tw||null;ST.zf_x=zf_x;ST.zf_w=zw||null;ST.to_y=to_y;ST.zf_y=zf_y;
@@ -2070,9 +2071,13 @@ function saveAcftFromModal(){
   if(!tail){g('m-tail').focus();showToast('Enter a tail number');return;}
   if(!w||!xa||!ya){showToast('All fields required');return;}
   var saved=getSavedAircraft();
-  // If editing and tail changed, remove old key
-  var oldTail=g('acft-select').value;
-  if(oldTail&&oldTail!==tail)delete saved[oldTail];
+  // Only delete old key when EDITING an existing aircraft with a changed tail number
+  var modalTitle=g('modal-title')?g('modal-title').textContent:'';
+  var isEditing=modalTitle==='Edit Aircraft';
+  if(isEditing){
+    var oldTail=g('acft-select').value;
+    if(oldTail&&oldTail!==tail)delete saved[oldTail];
+  }
   saved[tail]={w:w,xa:xa,ya:ya};
   saveSavedAircraft(saved);
   populateAcftSelect(tail);
