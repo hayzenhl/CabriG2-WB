@@ -553,9 +553,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .dt-cap-chip.warn{color:var(--red)}
   /* Panel section labels */
   .dt-merged-section-lbl{font-size:8px;font-weight:700;text-transform:uppercase;
-    letter-spacing:.1em;color:var(--text-muted);padding:8px 0 3px;
-    border-top:0.5px solid var(--border-light);margin-top:4px}
-  .dt-merged-section-lbl:first-of-type{border-top:none;margin-top:0;padding-top:0}
+    letter-spacing:.1em;color:var(--teal-dark);padding:4px 0 3px 8px;
+    margin-bottom:2px;border-left:2px solid var(--teal);
+    background:var(--teal-bg);border-radius:0 4px 4px 0;
+    border-top:none;margin-top:8px}
+  .dt-merged-section-lbl:first-of-type{margin-top:0}
   /* Individual row badges */
   .dt-merged-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;
     margin-left:6px;white-space:nowrap;flex-shrink:0}
@@ -821,10 +823,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <table class="dt-table">
               <thead><tr>
                 <th class="dt-th-item">Item</th>
-                <th class="dt-th-wt" style="text-align:right">Weight (lb)</th>
-                <th class="dt-th-arm">Long. Arm</th>
+                <th class="dt-th-wt" style="text-align:right">Weight<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">lb</span></th>
+                <th class="dt-th-arm">Long. arm<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">in</span></th>
                 <th class="dt-th-mom" style="text-align:right">Long. Moment<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(in·lb)</span></th>
-                <th class="dt-th-arm">Lat. Arm</th>
+                <th class="dt-th-arm">Lat. arm<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">in</span></th>
                 <th class="dt-th-mom" style="text-align:right">Lat. Moment<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(in·lb)</span></th>
               </tr></thead>
               <tbody>
@@ -945,27 +947,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
                 </tr>
               </tbody>
             </table>
-            <!-- Live totals pinned row -->
-            <table class="dt-table" style="margin-top:0" id="dt-live-table">
-              <tbody>
-                <tr class="dt-live-row" id="dt-live-row" style="display:none">
-                  <td>Totals</td>
-                  <td style="text-align:right"><span class="dt-live-val" id="dt-live-tw">—</span></td>
-                  <td></td>
-                  <td style="text-align:right"><span class="dt-live-val" id="dt-live-tx">—</span></td>
-                  <td></td>
-                  <td style="text-align:right"><span class="dt-live-val" id="dt-live-ty">—</span></td>
-                </tr>
-                <tr class="dt-live-row dt-zf-row" id="dt-zf-row" style="display:none;opacity:.65">
-                  <td>Zero fuel</td>
-                  <td style="text-align:right"><span class="dt-live-val" style="font-size:10px" id="dt-live-zw">—</span></td>
-                  <td></td>
-                  <td style="text-align:right"><span class="dt-live-val" style="font-size:10px" id="dt-live-zx">—</span></td>
-                  <td></td>
-                  <td style="text-align:right"><span class="dt-live-val" style="font-size:10px" id="dt-live-zy">—</span></td>
-                </tr>
-              </tbody>
-            </table>
+
           </div>
           <div class="dt-totbar" id="dt-totbar" style="display:none">
             <span class="dt-totbar-lbl">Totals</span>
@@ -1461,10 +1443,13 @@ function recalc(){
   (function(){
     var chip=g('wt-chip');if(!chip)return;
     var rem=1543-tw;
+    var cgOk=inP&&yOk;
+    var chipClass=rem<0?'wt-chip-over':(!cgOk||rem<50)?'wt-chip-warn':'wt-chip-ok';
+    var wtStr=rem<0?'OVER by '+Math.abs(rem).toFixed(1)+' lb':'+'+Math.round(rem)+' lb';
+    var cgStr=cgOk?'✓ C.G. ok':((!inP&&!yOk)?'✗ Long+Lat':(!inP?'✗ Long C.G.':'✗ Lat C.G.'));
+    chip.innerHTML=wtStr+'<span style="opacity:.7;margin-left:6px;font-weight:500">'+cgStr+'</span>';
+    chip.className=chipClass;
     chip.style.display='';
-    if(rem<0){chip.textContent='OVER by '+Math.abs(rem).toFixed(1)+' lb';chip.className='wt-chip-over';}
-    else if(rem<50){chip.textContent='+'+Math.round(rem)+' lb';chip.className='wt-chip-warn';}
-    else{chip.textContent='+'+Math.round(rem)+' lb';chip.className='wt-chip-ok';}
   })();
   if(isDesktop)dtUpdate();
 }
@@ -1698,32 +1683,7 @@ function dtUpdate(){
   if(dtLc)drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w,dtLc,200);
   if(dtRc)drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y,dtRc,160);
 
-  // Change 3: update live totals + zero-fuel rows
-  var liveRow=g('dt-live-row');
-  var zfRow=g('dt-zf-row');
-  var totVisible=g('totblock')&&g('totblock').style.display!=='none';
-  if(liveRow){
-    liveRow.style.display=totVisible?'':'none';
-    if(zfRow)zfRow.style.display=totVisible?'':'none';
-    if(totVisible){
-      var twEl=g('t-tw'),txEl=g('t-tx'),tyEl=g('t-ty');
-      var zwEl=g('t-zw'),zxEl=g('t-zx');
-      var mobLbar2=g('lbar');
-      var isOk2=mobLbar2&&mobLbar2.classList.contains('lok');
-      var isWarn2=mobLbar2&&mobLbar2.classList.contains('lwn');
-      var liveOk=isOk2?'ok':isWarn2?'warn':'';
-      var badge=liveOk?('<span class="dt-live-badge '+liveOk+'">'+(isOk2?'✓':'✗')+'</span>'):'';
-      var ltw=g('dt-live-tw'),ltx=g('dt-live-tx'),lty=g('dt-live-ty');
-      if(ltw&&twEl)ltw.textContent=twEl.textContent;
-      if(ltx&&txEl)ltx.innerHTML=txEl.textContent+badge;
-      if(lty&&tyEl)lty.innerHTML=tyEl.textContent+badge;
-      // ZF row
-      var lzw=g('dt-live-zw'),lzx=g('dt-live-zx'),lzy=g('dt-live-zy');
-      if(lzw&&zwEl)lzw.textContent=zwEl.textContent;
-      if(lzx&&zxEl)lzx.innerHTML=zxEl.textContent+badge;
-      if(lzy){lzy.innerHTML='—';}
-    }
-  }
+  // Desktop live row removed — panel handles all results
 
   // Change 4: update merged panel card
   dtUpdateMergedPanel();
