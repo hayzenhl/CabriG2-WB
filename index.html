@@ -732,13 +732,19 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   </div>
   <div class="dt-acft-actions">
     <button class="dt-acft-action" id="dt-acft-change-btn" onclick="dtToggleAcftPicker(event)" style="display:none">&#8645; Change</button>
-    <button class="dt-acft-action" onclick="openAcftModal(false)">+ Add</button>
+    <button class="dt-acft-action" onclick="openAcftModal(false)">+ Add aircraft</button>
     <button class="dt-acft-action" id="dt-acft-edit-btn" onclick="openAcftModal(true)" style="display:none">&#9998; Edit</button>
   </div>
   <!-- Aircraft picker dropdown -->
   <div class="dt-acft-picker" id="dt-acft-picker" style="display:none">
     <div class="dt-acft-picker-title">Switch aircraft</div>
     <div id="dt-acft-picker-list"></div>
+    <div style="border-top:1px solid rgba(255,255,255,.08);margin-top:4px;padding-top:4px">
+      <div class="dt-acft-picker-item" onclick="dtClosePicker();openAcftModal(false);" style="color:rgba(255,255,255,.5)">
+        <div class="dt-acft-picker-dot" style="background:rgba(255,255,255,.2)"></div>
+        <div style="font-size:11px">+ Add new aircraft</div>
+      </div>
+    </div>
   </div>
 </div>
 <!-- Expandable moments panel (desktop only) -->
@@ -1295,8 +1301,15 @@ function recalc(){
     if(mzfx)mzfx.textContent=zf_x!==null?fmt(zf_x,3)+' in':'—';
     if(mzfy)mzfy.textContent=zf_y!==null?fmt(zf_y,3)+' in':'—';
     var mbzx=g('mob-badge-zx'),mbzy=g('mob-badge-zy');
-    if(mbzx){mbzx.className='mob-res-badge '+(zfInP?'ok':'warn');mbzx.textContent=zfInP?'\u2713 in limits':'\u2717 out of limits';}
-    if(mbzy){mbzy.className='mob-res-badge '+(zfYok?'ok':'warn');mbzy.textContent=zfYok?'\u2713 in limits':'\u2717 out of limits';}
+    var zfWeightInRange=zw>=1036;
+    if(mbzx){
+      if(!zfWeightInRange){mbzx.className='mob-res-badge';mbzx.style.display='none';}
+      else{mbzx.style.display='';mbzx.className='mob-res-badge '+(zfInP?'ok':'warn');mbzx.textContent=zfInP?'\u2713 in limits':'\u2717 out of limits';}
+    }
+    if(mbzy){
+      if(!zfWeightInRange){mbzy.className='mob-res-badge';mbzy.style.display='none';}
+      else{mbzy.style.display='';mbzy.className='mob-res-badge '+(zfYok?'ok':'warn');mbzy.textContent=zfYok?'\u2713 in limits':'\u2717 out of limits';}
+    }
     // Fuel added row
     var fuelAdded=tw-zw;
     var mfl=g('mob-fuel-lb'),mfr=g('mob-fuel-row');
@@ -1415,7 +1428,9 @@ function recalc(){
         var atBandMax=parseFloat(entGal.toFixed(1))>=bandMax;
         stEl.innerHTML='<span style="color:var(--green);font-weight:600">'+entGal+' gal — in range</span>';
         if(capEl){
-          if(!yOk){
+          if(!wOk){
+            capEl.innerHTML='<span style="color:var(--red)">&#9888; Over max gross weight — reduce total weight</span>';
+          } else if(!yOk){
             capEl.innerHTML='<span style="color:var(--red)">&#9888; Lat. C.G. out of limits — reduce lateral imbalance</span>';
           } else if(atBandMax){
             capEl.innerHTML='<span style="color:var(--green);font-weight:600">✓ At band capacity ('+bandMax+' gal)</span>';
@@ -1735,8 +1750,16 @@ function dtUpdateMergedPanel(){
 
   // ZF CG badges — read from mobile badge classes
   var mobBzx=g('mob-badge-zx'),mobBzy=g('mob-badge-zy');
-  setBadge(g('dt-badge-zx'), mobBzx&&mobBzx.classList.contains('ok'));
-  setBadge(g('dt-badge-zy'), mobBzy&&mobBzy.classList.contains('ok'));
+  // Hide ZF badges when ZF weight is below envelope range
+  var zfBelowRange=mobBzx&&!mobBzx.classList.contains('ok')&&!mobBzx.classList.contains('warn');
+  if(zfBelowRange){
+    var bx=g('dt-badge-zx'),by=g('dt-badge-zy');
+    if(bx){bx.style.display='none';}
+    if(by){by.style.display='none';}
+  } else {
+    setBadge(g('dt-badge-zx'), mobBzx&&mobBzx.classList.contains('ok'));
+    setBadge(g('dt-badge-zy'), mobBzy&&mobBzy.classList.contains('ok'));
+  }
 
   // ── Fuel added bridge ──────────────────────────────────────────
   var fuelRow=g('dt-fuel-added-row'),fuelVal=g('dt-fuel-added-val');
@@ -1974,7 +1997,7 @@ function dtUpdateAcftChip(){
   var chevron=g('dt-acft-chevron');
   var expand=g('dt-acft-expand');
   if(!tail){
-    if(tailEl)tailEl.textContent='No aircraft selected';
+    if(tailEl){tailEl.innerHTML='<span style="opacity:.45">No aircraft —</span> <span style="color:rgba(255,255,255,.7);text-decoration:underline;cursor:pointer" onclick="openAcftModal(false)">+ Add from W&amp;B report</span>';}
     if(ewChip)ewChip.style.display='none';
     if(xaChip)xaChip.style.display='none';
     if(yaChip)yaChip.style.display='none';
