@@ -37,6 +37,7 @@
   --teal:#0f9580;
   --teal-bg:#e6f7f4;
   --teal-dark:#0a5444;
+  --amber:#d97706;
 }
 @media(prefers-color-scheme:dark){
   :root{
@@ -60,7 +61,14 @@
     --teal:#14b899;
     --teal-bg:#061c18;
     --teal-dark:#9fdfcf;
+  --amber:#f59e0b;
   }
+  .dt-merged-card.ok{background:#061c18;border-color:#14b899}
+  .dt-merged-card.warn{background:#2d1010;border-color:#ef4444}
+  .dt-merged-divider{background:linear-gradient(to right,#14b899,#162636)}
+  .mob-res-divider{background:linear-gradient(to right,#14b899,#162636)}
+  .mob-res-item{background:#0d1e2c}
+  .dt-acft-expand{background:#04101a}
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -87,6 +95,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .hbtn:active{background:rgba(255,255,255,.3)}
 
 /* wt-chip */
+.wt-chip-base{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:8px;background:rgba(255,255,255,.15);color:#fff;vertical-align:middle}
 #wt-chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;
   background:rgba(255,255,255,.15);color:#fff;transition:background .2s,color .2s}
 .wt-chip-ok{background:rgba(15,149,128,.3)!important;color:#9fe8d8!important}
@@ -118,6 +127,74 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .acft-val{display:flex;flex-direction:column;gap:1px}
 .acft-val-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em}
 .acft-val-num{font-size:12px;font-weight:700;color:#fff}
+/* Desktop compact aircraft chip */
+.dt-acft-bar{display:none;background:var(--navy-mid);padding:6px 24px;border-bottom:1px solid rgba(255,255,255,.06);align-items:center;gap:10px;flex-wrap:wrap;position:relative}
+.dt-acft-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.dt-acft-tail{font-size:12px;font-weight:700;color:#fff}
+.dt-acft-chips{display:flex;gap:5px;flex-wrap:wrap}
+.dt-acft-chip{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.dt-acft-chip.ew{background:rgba(15,149,128,.18);color:#9fe8d8;border:1px solid rgba(15,149,128,.3)}
+.dt-acft-chip.arm{background:rgba(255,255,255,.07);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.12)}
+.dt-acft-actions{display:flex;gap:5px;margin-left:auto;flex-shrink:0}
+.dt-acft-action{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);font-size:10px;font-weight:600;padding:3px 9px;
+  border-radius:5px;cursor:pointer;font-family:inherit;-webkit-appearance:none}
+.dt-acft-action:hover{background:rgba(255,255,255,.14);color:#fff}
+.dt-acft-picker{
+  position:absolute;right:24px;top:100%;z-index:200;
+  background:#0f2130;border:1px solid rgba(255,255,255,.15);
+  border-radius:8px;padding:6px;min-width:200px;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  margin-top:2px;
+}
+.dt-acft-picker-title{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:rgba(255,255,255,.35);padding:4px 8px 6px;border-bottom:1px solid rgba(255,255,255,.08);
+  margin-bottom:4px;
+}
+.dt-acft-picker-item{
+  padding:6px 10px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.85);display:flex;align-items:center;gap:8px;
+}
+.dt-acft-picker-item:hover{background:rgba(255,255,255,.08)}
+.dt-acft-picker-item.active{color:#9fe8d8}
+.dt-acft-picker-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);flex-shrink:0}
+.dt-acft-picker-dot.active{background:var(--teal)}
+.dt-acft-picker-item.empty{color:rgba(255,255,255,.3);font-style:italic;cursor:default;font-weight:400}
+/* Expandable moments panel */
+.dt-acft-expand{
+  background:#0a1c2c;border-top:1px solid rgba(255,255,255,.06);
+  padding:10px 24px 12px;display:none;
+}
+.dt-acft-expand.open{display:block}
+.dt-acft-math-table{
+  width:auto;border-collapse:collapse;font-size:11px;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.dt-acft-math-table th{
+  font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+  color:rgba(255,255,255,.35);padding:3px 10px 5px;text-align:right;white-space:nowrap;
+}
+.dt-acft-math-table th:first-child{text-align:left;padding-left:0}
+.dt-acft-math-table th.op{color:rgba(255,255,255,.2);width:20px;padding:3px 4px}
+.dt-acft-math-table th.sep{width:20px;background:rgba(255,255,255,.05)}
+.dt-acft-math-table td{
+  padding:4px 10px;border-top:1px solid rgba(255,255,255,.06);
+  color:#fff;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;
+}
+.dt-acft-math-table td:first-child{text-align:left;padding-left:0;color:rgba(255,255,255,.7);font-weight:400}
+.dt-acft-math-table td.op{color:rgba(255,255,255,.3);text-align:center;font-size:13px;font-weight:300}
+.dt-acft-math-table td.sep{background:rgba(255,255,255,.04);border-top-color:transparent}
+.dt-acft-math-note{
+  font-size:9px;color:rgba(255,255,255,.3);margin-top:8px;font-style:italic;
+}
+.dt-acft-chevron{transition:transform .15s}
+.dt-acft-chevron.open{transform:rotate(180deg)}
+.dt-acft-summary{display:flex;align-items:center;gap:10px;flex:1;min-width:0;
+  cursor:pointer;padding:2px 4px;border-radius:4px;transition:background .1s}
+.dt-acft-summary:hover{background:rgba(255,255,255,.05)}
+.dt-acft-summary:hover .dt-acft-tail{color:rgba(255,255,255,.95)}
+.dt-acft-summary:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:4px}
 
 /* ── Main content ─────────────────────────────────────────── */
 .main{padding:12px 12px 80px;max-width:680px;margin:0 auto}
@@ -152,18 +229,27 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .card-info{flex:1;min-width:0}
 .card-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
 .card-note{font-size:10px;color:var(--text-muted);margin-top:2px}
-.card-arms{font-size:10px;color:var(--text-muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.card-arms{font-size:10px;color:var(--text-muted);margin-top:3px;display:flex;gap:5px;flex-wrap:wrap}
+.arm-badge{display:inline-block;font-size:9px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--teal-bg);color:var(--teal-dark);border:1px solid rgba(15,149,128,.2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.lat-arm-badge{background:#eff6ff;color:#1e40af;border-color:rgba(37,99,235,.2)}
 .card-inputs{display:flex;gap:8px;flex-shrink:0;align-items:flex-end}
 .inp-grp{display:flex;flex-direction:column;gap:3px}
 .inp-lbl{font-size:9px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:right}
 .card-moms{
-  display:flex;gap:12px;padding:7px 12px;
+  display:grid;grid-template-columns:1fr 1fr;gap:5px;
+  padding:6px 10px 8px;
   background:var(--bg);border-top:1px solid var(--border-light);
-  font-size:10px;color:var(--text-muted);
 }
-.mom-item{display:flex;flex-direction:column;gap:1px}
-.mom-lbl{font-size:9px;color:var(--text-muted)}
-.mom-val{font-size:12px;font-weight:600;color:var(--text-mid);font-variant-numeric:tabular-nums}
+.mom-item{
+  background:var(--surface);border:1px solid var(--border-light);
+  border-radius:var(--radius-sm);padding:5px 8px;
+}
+.mom-lbl{font-size:8px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--text-muted);margin-bottom:2px}
+.mom-val{font-size:13px;font-weight:700;color:var(--text-mid);
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.mom-val.dim{color:var(--text-muted);font-size:12px;font-weight:400}
+.mom-unit{font-size:9px;font-weight:400;color:var(--text-muted);margin-left:2px}
 
 /* Inputs */
 .inp{
@@ -218,6 +304,29 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;
   background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);
 }
+/* Mobile results block */
+.mob-results{margin-bottom:10px}
+.mob-res-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-bottom:0}
+.mob-res-takeoff{margin-top:0}
+.mob-res-item{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px 12px;box-shadow:var(--shadow)}
+.mob-res-lbl{font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--text-muted);margin-bottom:4px}
+.mob-res-val{font-size:15px;font-weight:700;color:var(--text);
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.mob-res-big{font-size:17px}
+.mob-res-badge{display:inline-block;font-size:9px;font-weight:700;
+  padding:1px 7px;border-radius:20px;margin-top:4px}
+.mob-res-badge.ok{background:var(--teal-bg);color:var(--teal-dark)}
+.mob-res-badge.warn{background:var(--red-bg);color:var(--red)}
+.mob-res-fuel-row{display:flex;align-items:center;gap:8px;
+  padding:6px 12px;margin:5px 0;font-size:12px;color:var(--text-muted)}
+.mob-res-arrow{font-size:16px;font-weight:700;color:var(--teal)}
+.mob-res-fuel-lbl{font-weight:500;color:var(--text-muted)}
+.mob-res-fuel-val{font-weight:700;color:var(--text);margin-left:auto;
+  font-variant-numeric:tabular-nums}
+.mob-res-divider{height:1.5px;background:linear-gradient(to right,var(--teal),var(--border-light));
+  margin:4px 0 8px;border-radius:2px}
 .lok{background:var(--teal-bg)!important;border-color:var(--teal)!important}
 .lwn{background:var(--red-bg)!important;border-color:var(--red)!important}
 .lbar strong{font-size:12px;font-weight:700;display:block;margin-bottom:8px;color:var(--text)}
@@ -317,7 +426,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .mf input::placeholder{color:rgba(255,255,255,.3)}
   .mf label{font-size:9px;font-weight:600;color:rgba(255,255,255,.35);
     text-transform:uppercase;letter-spacing:.07em}
-  .acft-section{padding:6px 24px}
+  .acft-section{display:none!important}
 
   /* ── Main: side-by-side table + panel ── */
   .main{padding:14px 24px 48px;max-width:1200px}
@@ -379,6 +488,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .dt-inp::-webkit-outer-spin-button,.dt-inp::-webkit-inner-spin-button{-webkit-appearance:none}
   .dt-inp:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(15,149,128,.12);
     background:var(--teal-bg)}
+  .dt-table tbody tr.row-focus td{background:var(--teal-bg)!important}
+  .dt-table tbody tr.row-focus td:first-child{background:var(--teal-bg)!important}
   .dt-inp.over-weight{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
   .dt-gal-inp{width:60px}
 
@@ -397,8 +508,79 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .dt-fuel-status{font-size:10px;color:var(--text-muted);line-height:1.3}
   .dt-fuel-cap{font-size:9px;color:var(--text-muted);margin-top:1px}
 
+  /* Totals bar — now a dark pinned table row style */
+  .dt-totbar{display:none!important}
+
+  /* Change 2: section title with count */
+  .dt-section-title{display:flex;align-items:center;justify-content:space-between}
+  .dt-sec-count{font-size:9px;font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0}
+
+  /* Change 3: live totals row — dark pinned at bottom of table */
+  .dt-live-row{cursor:default;user-select:none}
+  .dt-live-row td{background:#0f2130!important;border-color:#0f2130!important;transition:none}
+  .dt-live-row td:first-child{border-left-color:var(--teal)!important;color:#9fe8d8!important;
+    font-size:10px!important;font-weight:700!important;letter-spacing:.06em;text-transform:uppercase}
+  .dt-live-row:hover td{background:#0f2130!important}
+  .dt-live-val{font-size:11px;font-weight:700;color:#fff;text-align:right;font-variant-numeric:tabular-nums}
+  .dt-live-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:6px;margin-left:3px}
+  .dt-live-badge.ok{background:rgba(20,184,153,.25);color:#9fe8d8}
+  .dt-live-badge.warn{background:rgba(239,68,68,.3);color:#fca5a5}
+
+  /* Change 4: merged panel card */
+  .dt-merged-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:12px 14px;margin-bottom:10px}
+  .dt-merged-card.ok{background:var(--teal-bg);border-color:var(--teal)}
+  .dt-merged-card.warn{background:var(--red-bg);border-color:var(--red)}
+  .dt-merged-card.neutral{background:var(--surface)}
+  .dt-merged-title{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+  .dt-merged-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0;font-size:10px}
+  .dt-merged-icon.ok{background:var(--teal);color:#fff}
+  .dt-merged-icon.warn{background:var(--red);color:#fff}
+  .dt-merged-icon.neutral{background:var(--border);color:var(--text-muted)}
+  .dt-merged-title-text{font-size:12px;font-weight:700}
+  .dt-merged-card.ok .dt-merged-title-text{color:var(--teal-dark)}
+  .dt-merged-card.warn .dt-merged-title-text{color:var(--red)}
+  .dt-merged-card.neutral .dt-merged-title-text{color:var(--text-muted)}
+  
+  .dt-merged-row:last-of-type{border-bottom:none;padding-bottom:0}
+  .dt-merged-lbl{color:var(--text-muted)}
+  .dt-merged-val{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+  .dt-merged-ok{font-size:9px;font-weight:700;color:var(--teal);margin-left:4px}
+  .dt-merged-warn{font-size:9px;font-weight:700;color:var(--red);margin-left:4px}
+  .dt-cap-chip{margin-top:8px;padding-top:8px;border-top:0.5px solid rgba(0,0,0,.06);
+    font-size:10px;color:var(--teal-dark);font-weight:600}
+  .dt-cap-chip.warn{color:var(--red)}
+  /* Panel section labels */
+  .dt-merged-section-lbl{font-size:8px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--text-muted);padding:8px 0 3px;
+    border-top:0.5px solid var(--border-light);margin-top:4px}
+  .dt-merged-section-lbl:first-of-type{border-top:none;margin-top:0;padding-top:0}
+  /* Individual row badges */
+  .dt-merged-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;
+    margin-left:6px;white-space:nowrap;flex-shrink:0}
+  .dt-merged-badge.ok{background:var(--teal-bg);color:var(--teal-dark)}
+  .dt-merged-badge.warn{background:var(--red-bg);color:var(--red)}
+  /* Fuel added bridge row */
+  .dt-merged-fuel-row{display:flex;align-items:center;gap:6px;
+    padding:5px 0 3px;font-size:11px}
+  .dt-merged-fuel-plus{font-size:14px;font-weight:700;color:var(--teal);line-height:1}
+  .dt-merged-fuel-lbl{color:var(--text-muted);font-weight:500}
+  .dt-merged-fuel-val{margin-left:auto;font-weight:700;color:var(--text);
+    font-variant-numeric:tabular-nums}
+  /* Divider between ZF and Takeoff */
+  .dt-merged-divider{height:1.5px;background:linear-gradient(to right,var(--teal),var(--border-light));
+    margin:4px 0 6px;border-radius:2px}
+  /* Row layout: label | value | badge */
+  .dt-merged-row{display:flex;align-items:baseline;justify-content:space-between;
+    padding:3px 0;border-bottom:0.5px solid var(--border-light);font-size:11px}
+  .dt-merged-row:last-of-type{border-bottom:none}
+
+  /* Desktop aircraft bar */
+  .dt-acft-bar{display:flex!important}
+
   /* Totals bar */
-  .dt-totbar{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);
+  .dt-totbar-old{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);
     border-radius:8px;padding:8px 12px;display:flex;gap:24px;align-items:center;
     margin-top:4px}
   .dt-totbar-lbl{font-size:10px;font-weight:700;text-transform:uppercase;
@@ -445,6 +627,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   /* Lbar hidden on desktop (replaced by dt-lbar) */
   .lbar{display:none}
 
+  /* Hide mobile-only elements */
+  .cbtn{display:none!important}
   /* Modal */
   .modal{max-width:420px;padding:24px}
 }
@@ -500,7 +684,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <body>
 <div class="hdr">
   <div class="hdr-row">
-    <div><h1>Cabri G2 &mdash; Weight &amp; Balance</h1><div class="hdr-sub">POH Issue 10.1 &nbsp;<span id="wt-chip" style="display:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;margin-left:6px;background:rgba(255,255,255,0.15);color:#fff"></span></div></div>
+    <div><h1>Cabri G2 &mdash; Weight &amp; Balance</h1><div class="hdr-sub">POH Issue 10.1 &nbsp;<span id="wt-chip" class="wt-chip-base" style="display:none"></span></div></div>
     <div class="btn-row">
       <button class="hbtn" id="sharebtn" onclick="doShare()">&#8679; Share</button>
       <button class="hbtn" onclick="doPrint()">Print/PDF</button>
@@ -529,6 +713,65 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="acft-val"><div class="acft-val-lbl">Lat. Arm</div><div class="acft-val-num" id="av-ya">—</div></div>
     <div class="acft-val"><div class="acft-val-lbl">Lat. Moment</div><div class="acft-val-num" id="av-ym">—</div></div>
   </div>
+</div>
+
+<!-- Desktop aircraft compact chip (shown via CSS on pointer:fine) -->
+<div class="dt-acft-bar" id="dt-acft-bar">
+  <!-- Clickable summary row -->
+  <div class="dt-acft-summary" id="dt-acft-summary" onclick="dtToggleAcftExpand()" role="button" tabindex="0" style="cursor:pointer;display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+    <div class="dt-acft-dot"></div>
+    <span class="dt-acft-tail" id="dt-acft-tail">No aircraft selected</span>
+    <div class="dt-acft-chips" id="dt-acft-chips">
+      <span class="dt-acft-chip ew" id="dt-chip-ew" style="display:none"></span>
+      <span class="dt-acft-chip arm" id="dt-chip-xa" style="display:none"></span>
+      <span class="dt-acft-chip arm" id="dt-chip-ya" style="display:none"></span>
+    </div>
+    <span class="dt-acft-chevron" id="dt-acft-chevron" style="display:none;font-size:10px;color:rgba(255,255,255,.4);margin-left:auto;padding-right:4px">&#9660; Show math</span>
+  </div>
+  <div class="dt-acft-actions">
+    <button class="dt-acft-action" id="dt-acft-change-btn" onclick="dtToggleAcftPicker(event)" style="display:none">&#8645; Change</button>
+    <button class="dt-acft-action" onclick="openAcftModal(false)">+ Add</button>
+    <button class="dt-acft-action" id="dt-acft-edit-btn" onclick="openAcftModal(true)" style="display:none">&#9998; Edit</button>
+  </div>
+  <!-- Aircraft picker dropdown -->
+  <div class="dt-acft-picker" id="dt-acft-picker" style="display:none">
+    <div class="dt-acft-picker-title">Switch aircraft</div>
+    <div id="dt-acft-picker-list"></div>
+  </div>
+</div>
+<!-- Expandable moments panel (desktop only) -->
+<div class="dt-acft-expand" id="dt-acft-expand" style="display:none">
+  <table class="dt-acft-math-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Weight (lb)</th>
+        <th class="op">×</th>
+        <th>Long. Arm (in)</th>
+        <th class="op">=</th>
+        <th>Long. Moment (in·lb)</th>
+        <th class="sep"></th>
+        <th>Lat. Arm (in)</th>
+        <th class="op">×</th>
+        <th>Lat. Moment (in·lb)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="item">Empty Weight</td>
+        <td id="dt-math-ew">—</td>
+        <td class="op">×</td>
+        <td id="dt-math-xa">—</td>
+        <td class="op">=</td>
+        <td id="dt-math-lm">—</td>
+        <td class="sep"></td>
+        <td id="dt-math-ya">—</td>
+        <td class="op">×</td>
+        <td id="dt-math-ym">—</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="dt-acft-math-note">Empty weight moments from current W&amp;B report. Verify against aircraft documentation before flight.</div>
 </div>
 
 <!-- Aircraft add/edit modal -->
@@ -574,15 +817,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <!-- Left: W&B table -->
         <div>
           <div class="dt-section">
-            <div class="dt-section-title">Aircraft &amp; Occupants</div>
+            <div class="dt-section-title"><span>Aircraft &amp; Occupants</span><span class="dt-sec-count" id="dt-sec-occ">—</span></div>
             <table class="dt-table">
               <thead><tr>
                 <th class="dt-th-item">Item</th>
                 <th class="dt-th-wt" style="text-align:right">Weight (lb)</th>
                 <th class="dt-th-arm">Long. Arm</th>
-                <th class="dt-th-mom" style="text-align:right">Long. Mom.</th>
+                <th class="dt-th-mom" style="text-align:right">Long. Moment<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(in·lb)</span></th>
                 <th class="dt-th-arm">Lat. Arm</th>
-                <th class="dt-th-mom" style="text-align:right">Lat. Mom.</th>
+                <th class="dt-th-mom" style="text-align:right">Lat. Moment<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(in·lb)</span></th>
               </tr></thead>
               <tbody>
                 <tr>
@@ -613,20 +856,34 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             </table>
           </div>
           <div class="dt-section">
-            <div class="dt-section-title">Doors</div>
+            <div class="dt-section-title"><span>Doors</span><span class="dt-sec-count" id="dt-sec-doors">both on</span></div>
             <table class="dt-table">
               <tbody>
                 <tr>
-                  <td>Right door<br><span style="font-size:9px;color:var(--text-muted);font-weight:400">Arm 49.2 in · −6.8 lb if removed</span></td>
-                  <td style="text-align:right"><input class="dt-inp" id="dt-w3" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td>Right door
+                    <div class="dt-door-wrap">
+                      <div class="dt-door-toggle">
+                        <button class="dt-door-btn active on" id="dt-rd-on" onclick="dtSetDoor('r','on')">On</button>
+                        <button class="dt-door-btn off" id="dt-rd-off" onclick="dtSetDoor('r','off')">Off (−6.8 lb)</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w3" type="text" inputmode="decimal" placeholder="—" style="background:var(--border-light);color:var(--text-muted);cursor:default" readonly></td>
                   <td style="text-align:center"><span class="dt-arm">49.2</span></td>
                   <td class="dt-mom dim" id="dt-lm3">—</td>
                   <td style="text-align:center"><span class="dt-arm">+23.6</span></td>
                   <td class="dt-mom dim" id="dt-ym3">—</td>
                 </tr>
                 <tr>
-                  <td>Left door<br><span style="font-size:9px;color:var(--text-muted);font-weight:400">Arm 49.2 in · −6.8 lb if removed</span></td>
-                  <td style="text-align:right"><input class="dt-inp" id="dt-w4" type="text" inputmode="decimal" placeholder="—"></td>
+                  <td>Left door
+                    <div class="dt-door-wrap">
+                      <div class="dt-door-toggle">
+                        <button class="dt-door-btn active on" id="dt-ld-on" onclick="dtSetDoor('l','on')">On</button>
+                        <button class="dt-door-btn off" id="dt-ld-off" onclick="dtSetDoor('l','off')">Off (−6.8 lb)</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="text-align:right"><input class="dt-inp" id="dt-w4" type="text" inputmode="decimal" placeholder="—" style="background:var(--border-light);color:var(--text-muted);cursor:default" readonly></td>
                   <td style="text-align:center"><span class="dt-arm">49.2</span></td>
                   <td class="dt-mom dim" id="dt-lm4">—</td>
                   <td style="text-align:center"><span class="dt-arm">−23.6</span></td>
@@ -636,7 +893,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             </table>
           </div>
           <div class="dt-section">
-            <div class="dt-section-title">Baggage</div>
+            <div class="dt-section-title"><span>Baggage</span><span class="dt-sec-count" id="dt-sec-bag"></span></div>
             <table class="dt-table">
               <tbody>
                 <tr>
@@ -659,7 +916,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             </table>
           </div>
           <div class="dt-section">
-            <div class="dt-section-title">Fuel — enter total gallons in the matching band only</div>
+            <div class="dt-section-title"><span>Fuel</span><span class="dt-sec-count" id="dt-sec-fuel">enter total gal in matching band</span></div>
             <table class="dt-table">
               <tbody>
                 <tr>
@@ -688,6 +945,27 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
                 </tr>
               </tbody>
             </table>
+            <!-- Live totals pinned row -->
+            <table class="dt-table" style="margin-top:0" id="dt-live-table">
+              <tbody>
+                <tr class="dt-live-row" id="dt-live-row" style="display:none">
+                  <td>Totals</td>
+                  <td style="text-align:right"><span class="dt-live-val" id="dt-live-tw">—</span></td>
+                  <td></td>
+                  <td style="text-align:right"><span class="dt-live-val" id="dt-live-tx">—</span></td>
+                  <td></td>
+                  <td style="text-align:right"><span class="dt-live-val" id="dt-live-ty">—</span></td>
+                </tr>
+                <tr class="dt-live-row dt-zf-row" id="dt-zf-row" style="display:none;opacity:.65">
+                  <td>Zero fuel</td>
+                  <td style="text-align:right"><span class="dt-live-val" style="font-size:10px" id="dt-live-zw">—</span></td>
+                  <td></td>
+                  <td style="text-align:right"><span class="dt-live-val" style="font-size:10px" id="dt-live-zx">—</span></td>
+                  <td></td>
+                  <td style="text-align:right"><span class="dt-live-val" style="font-size:10px" id="dt-live-zy">—</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div class="dt-totbar" id="dt-totbar" style="display:none">
             <span class="dt-totbar-lbl">Totals</span>
@@ -701,20 +979,71 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
         <!-- Right panel -->
         <div class="dt-panel">
-          <div class="dt-lbar neutral" id="dt-lbar"><div class="dt-lbar-title" style="color:var(--text-muted)">Enter weights to see results</div></div>
-          <div class="dt-result-card" id="dt-result-card" style="display:none">
-            <div class="dt-result-title">Results</div>
-            <div class="dt-result-row"><span class="dt-result-lbl">Takeoff weight</span><span class="dt-result-val" id="dt-sv-tw">—</span></div>
-            <div class="dt-result-row"><span class="dt-result-lbl">Long. C.G.</span><span class="dt-result-val">— <span class="dt-badge" id="dt-ss-lx"></span></span></div>
-            <div class="dt-result-row"><span class="dt-result-lbl">Lat. C.G.</span><span class="dt-result-val">— <span class="dt-badge" id="dt-ss-ly"></span></span></div>
-            <div class="dt-result-row"><span class="dt-result-lbl">Zero fuel weight</span><span class="dt-result-val" id="dt-sv-zw">—</span></div>
+          <!-- Merged panel: All limits → ZF → fuel → Takeoff -->
+          <div class="dt-merged-card neutral" id="dt-merged-card">
+
+            <!-- Status title -->
+            <div class="dt-merged-title">
+              <div class="dt-merged-icon neutral" id="dt-merged-icon">—</div>
+              <div class="dt-merged-title-text" id="dt-merged-title-text">Enter weights to calculate</div>
+            </div>
+
+            <!-- Zero fuel section -->
+            <div class="dt-merged-section-lbl">Zero fuel</div>
+            <div class="dt-merged-row">
+              <span class="dt-merged-lbl">Weight</span>
+              <span class="dt-merged-val" id="dt-sv-zw">—</span>
+            </div>
+            <div class="dt-merged-row">
+              <span class="dt-merged-lbl">Long. C.G.</span>
+              <span class="dt-merged-val" id="dt-sv-zx">—</span>
+              <span class="dt-merged-badge" id="dt-badge-zx" style="display:none"></span>
+            </div>
+            <div class="dt-merged-row">
+              <span class="dt-merged-lbl">Lat. C.G.</span>
+              <span class="dt-merged-val" id="dt-sv-zy">—</span>
+              <span class="dt-merged-badge" id="dt-badge-zy" style="display:none"></span>
+            </div>
+
+            <!-- Fuel added bridge -->
+            <div class="dt-merged-fuel-row" id="dt-fuel-added-row" style="display:none">
+              <span class="dt-merged-fuel-plus">+</span>
+              <span class="dt-merged-fuel-lbl">Fuel added</span>
+              <span class="dt-merged-fuel-val" id="dt-fuel-added-val">—</span>
+            </div>
+            <div class="dt-merged-divider"></div>
+
+            <!-- Takeoff section -->
+            <div class="dt-merged-section-lbl">Takeoff</div>
+            <div class="dt-merged-row">
+              <span class="dt-merged-lbl">Weight</span>
+              <span class="dt-merged-val" id="dt-sv-tw">—</span>
+            </div>
+            <div class="dt-merged-row">
+              <span class="dt-merged-lbl">Long. C.G.</span>
+              <span class="dt-merged-val" id="dt-sv-lx">—</span>
+              <span class="dt-merged-badge" id="dt-badge-lx" style="display:none"></span>
+            </div>
+            <div class="dt-merged-row">
+              <span class="dt-merged-lbl">Lat. C.G.</span>
+              <span class="dt-merged-val" id="dt-sv-ly">—</span>
+              <span class="dt-merged-badge" id="dt-badge-ly" style="display:none"></span>
+            </div>
+
+            <div class="dt-cap-chip" id="dt-cap-chip" style="display:none"></div>
           </div>
-          <div class="dt-charts">
-            <div class="chdr"><span class="ctitle">Long. Envelope</span><span class="cst cnt" id="dt-lst">—</span></div>
-            <div class="cbody"><canvas id="dt-lc" height="200"></canvas></div>
-            <div class="chdr" style="border-top:1px solid rgba(255,255,255,.1)"><span class="ctitle">Lat. Envelope</span><span class="cst cnt" id="dt-rst">—</span></div>
-            <div class="cbody"><canvas id="dt-rc" height="160"></canvas></div>
+          <!-- Lbar mirror (hidden — used by dtUpdate) -->
+          <div style="display:none" id="dt-lbar"></div>
+          <div style="display:none" id="dt-result-card">
+            <span id="dt-ss-lx"></span><span id="dt-ss-ly"></span>
           </div>
+          <!-- Hidden canvases for drawLong/drawLat -->
+          <div style="display:none">
+            <canvas id="dt-lc"></canvas>
+            <canvas id="dt-rc"></canvas>
+          </div>
+          <span style="display:none" id="dt-lst"></span>
+          <span style="display:none" id="dt-rst"></span>
         </div>
 
       </div>
@@ -726,63 +1055,63 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="grp-label">Aircraft</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Empty Weight</div><div class="card-note">From aircraft W&amp;B report — enter weight, long. arm and lat. arm</div><div class="card-arms">Long. &amp; Lat. Arms: from W&amp;B report</div></div>
+        <div class="card-info"><div class="card-name">Empty Weight</div><div class="card-note">Enter weight and both arms from the aircraft W&amp;B report</div></div>
         <div class="card-inputs">
-          <div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w0" type="text" placeholder="-" inputmode="decimal"></div>
-          <div class="inp-grp"><div class="inp-lbl">Long. Arm</div><input class="inp" id="xa0" type="text" placeholder="-" inputmode="decimal" style="width:64px;font-size:13px"></div>
-          <div class="inp-grp"><div class="inp-lbl">Lat. Arm</div><input class="inp" id="ya0" type="text" placeholder="-" inputmode="decimal" style="width:64px;font-size:13px"></div>
+          <div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w0" type="text" placeholder="—" inputmode="decimal"></div>
+          <div class="inp-grp"><div class="inp-lbl">Long. Arm</div><input class="inp" id="xa0" type="text" placeholder="—" inputmode="decimal" style="width:64px;font-size:13px"></div>
+          <div class="inp-grp"><div class="inp-lbl">Lat. Arm</div><input class="inp" id="ya0" type="text" placeholder="—" inputmode="decimal" style="width:64px;font-size:13px"></div>
         </div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm0">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym0">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm0">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym0">-</div></div></div>
     </div>
     <div class="grp-label">Occupants</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Pilot (right seat)</div><div class="card-arms">Long. Arm: 51.2 in | Lat. Arm: +12.6 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w1" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Pilot (right seat)</div><div class="card-arms"><span class="arm-badge">Long. 51.2 in</span><span class="arm-badge lat-arm-badge">Lat. +12.6 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w1" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm1">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym1">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm1">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym1">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Passenger (left seat)</div><div class="card-arms">Long. Arm: 51.2 in | Lat. Arm: -11.0 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w2" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Passenger (left seat)</div><div class="card-arms"><span class="arm-badge">Long. 51.2 in</span><span class="arm-badge lat-arm-badge">Lat. -11.0 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w2" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm2">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym2">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm2">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym2">-</div></div></div>
     </div>
     <div class="grp-label">Doors</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Right door</div><div class="card-arms">Long. Arm: 49.2 in | Lat. Arm: +23.6 in</div>
+        <div class="card-info"><div class="card-name">Right door</div><div class="card-arms"><span class="arm-badge">Long. 49.2 in</span><span class="arm-badge lat-arm-badge">Lat. +23.6 in</span></div>
           <div class="door-toggle"><span class="toggle-lbl">Door status:</span><div class="toggle-wrap"><button class="toggle-opt active on" id="rd-on" onclick="setDoor('r','on')">On</button><button class="toggle-opt off" id="rd-off" onclick="setDoor('r','off')">Off (-6.8 lb)</button></div></div>
         </div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w3" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w3" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm3">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym3">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm3">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym3">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Left door</div><div class="card-arms">Long. Arm: 49.2 in | Lat. Arm: -23.6 in</div>
+        <div class="card-info"><div class="card-name">Left door</div><div class="card-arms"><span class="arm-badge">Long. 49.2 in</span><span class="arm-badge lat-arm-badge">Lat. -23.6 in</span></div>
           <div class="door-toggle"><span class="toggle-lbl">Door status:</span><div class="toggle-wrap"><button class="toggle-opt active on" id="ld-on" onclick="setDoor('l','on')">On</button><button class="toggle-opt off" id="ld-off" onclick="setDoor('l','off')">Off (-6.8 lb)</button></div></div>
         </div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w4" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w4" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm4">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym4">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm4">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym4">-</div></div></div>
     </div>
     <div class="grp-label">Baggage</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Main luggage</div><div class="card-note" id="bag-main-note">Max 88 lb — must comply with C.G. limits</div><div class="card-arms">Long. Arm: 73.0 in | Lat. Arm: +12.7 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w5" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Main luggage</div><div class="card-note" id="bag-main-note">Max 88 lb — must comply with C.G. limits</div><div class="card-arms"><span class="arm-badge">Long. 73.0 in</span><span class="arm-badge lat-arm-badge">Lat. +12.7 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w5" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm5">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym5">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm5">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym5">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Front luggage</div><div class="card-note" id="bag-front-note">Max 11 lb — must comply with C.G. limits</div><div class="card-arms">Long. Arm: 12.8 in | Lat. Arm: 0.0 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w6" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Front luggage</div><div class="card-note" id="bag-front-note">Max 11 lb — must comply with C.G. limits</div><div class="card-arms"><span class="arm-badge">Long. 12.8 in</span><span class="arm-badge lat-arm-badge">Lat. 0.0 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Weight (lb)</div><input class="inp" id="w6" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm6">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym6">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm6">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym6">-</div></div></div>
     </div>
     
     <div class="fuel-note">
@@ -798,42 +1127,91 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="grp-label">Fuel</div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Fuel 0–13 gal</div><div class="card-note"><span id="fuel-status-7">Use for 0–13 gal on board</span><div id="fuel-cap-7" class="fuel-cap"></div></div><div class="card-arms">Long. Arm: 72.2 in | Lat. Arm: -12.3 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w7" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Fuel 0–13 gal</div><div class="card-note"><span id="fuel-status-7">Use for 0–13 gal on board</span><div id="fuel-cap-7" class="fuel-cap"></div></div><div class="card-arms"><span class="arm-badge">Long. 72.2 in</span><span class="arm-badge lat-arm-badge">Lat. -12.3 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w7" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val" id="fw7">-</div></div><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm7">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym7">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val dim" id="fw7">-</div></div><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm7">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym7">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Fuel 13–40 gal</div><div class="card-note"><span id="fuel-status-8">Use for 13–40 gal on board</span><div id="fuel-cap-8" class="fuel-cap"></div></div><div class="card-arms">Long. Arm: 74.2 in | Lat. Arm: -13.3 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w8" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Fuel 13–40 gal</div><div class="card-note"><span id="fuel-status-8">Use for 13–40 gal on board</span><div id="fuel-cap-8" class="fuel-cap"></div></div><div class="card-arms"><span class="arm-badge">Long. 74.2 in</span><span class="arm-badge lat-arm-badge">Lat. -13.3 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w8" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val" id="fw8">-</div></div><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm8">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym8">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val dim" id="fw8">-</div></div><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm8">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym8">-</div></div></div>
     </div>
     <div class="card">
       <div class="card-top">
-        <div class="card-info"><div class="card-name">Fuel 40–45 gal</div><div class="card-note"><span id="fuel-status-9">Use for 40–45 gal on board</span><div id="fuel-cap-9" class="fuel-cap"></div></div><div class="card-arms">Long. Arm: 74.9 in | Lat. Arm: -13.5 in</div></div>
-        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w9" type="text" placeholder="-" inputmode="decimal"></div></div>
+        <div class="card-info"><div class="card-name">Fuel 40–45 gal</div><div class="card-note"><span id="fuel-status-9">Use for 40–45 gal on board</span><div id="fuel-cap-9" class="fuel-cap"></div></div><div class="card-arms"><span class="arm-badge">Long. 74.9 in</span><span class="arm-badge lat-arm-badge">Lat. -13.5 in</span></div></div>
+        <div class="card-inputs"><div class="inp-grp"><div class="inp-lbl">Gallons</div><input class="inp" id="w9" type="text" placeholder="—" inputmode="decimal"></div></div>
       </div>
-      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val" id="fw9">-</div></div><div class="mom-item"><div class="mom-lbl">Long. Moment</div><div class="mom-val" id="lm9">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. Moment</div><div class="mom-val" id="ym9">-</div></div></div>
+      <div class="card-moms"><div class="mom-item"><div class="mom-lbl">Weight (lb)</div><div class="mom-val dim" id="fw9">-</div></div><div class="mom-item"><div class="mom-lbl">Long. moment</div><div class="mom-val dim" id="lm9">-</div></div><div class="mom-item"><div class="mom-lbl">Lat. moment</div><div class="mom-val dim" id="ym9">-</div></div></div>
     </div>
   </div>
   <button class="cbtn" onclick="clearAll()">Clear all weights</button>
-  <div class="tot-block" id="totblock" style="display:none">
-    <div class="tot-row tot-zf"><div class="tot-label">Zero Fuel</div><div class="tot-item"><div class="tot-item-lbl">Weight</div><div class="tot-item-val" id="t-zw">-</div></div><div class="tot-item"><div class="tot-item-lbl">Long. C.G.</div><div class="tot-item-val" id="t-zx">-</div></div><div class="tot-item"><div class="tot-item-lbl">Lat. C.G.</div><div class="tot-item-val" id="t-zy">-</div></div></div>
-    <div class="tot-row tot-to"><div class="tot-label">Takeoff</div><div class="tot-item"><div class="tot-item-lbl">Weight</div><div class="tot-item-val" id="t-tw">-</div></div><div class="tot-item"><div class="tot-item-lbl">Long. C.G.</div><div class="tot-item-val" id="t-tx">-</div></div><div class="tot-item"><div class="tot-item-lbl">Lat. C.G.</div><div class="tot-item-val" id="t-ty">-</div></div></div>
+  <!-- Hidden totblock: IDs preserved for recalc/dtUpdate — not displayed on mobile -->
+  <div id="totblock" style="display:none">
+    <div id="t-zw"></div><div id="t-zx"></div><div id="t-zy"></div>
+    <div id="t-tw"></div><div id="t-tx"></div><div id="t-ty"></div>
   </div>
-  <div class="lbar lnt" id="lbar">Enter weights above to calculate C.G.</div>
-  <div class="sgrid" id="sgrid" style="display:none">
+  <!-- Hidden sgrid: IDs preserved for recalc/dtUpdate -->
+  <div id="sgrid" style="display:none">
+    <div id="sv-zw"></div><div id="ss-zw"></div>
+    <div id="sv-lx"></div><div id="ss-lx"></div>
+    <div id="sv-ly"></div><div id="ss-ly"></div>
+  </div>
 
-    <div class="sc"><div class="sl">Zero fuel weight</div><div class="sv" id="sv-zw">- <small>lb</small></div><div class="ss snt" id="ss-zw"></div></div>
-    <div class="sc"><div class="sl">Long. C.G. (Takeoff)</div><div class="sv" id="sv-lx">- <small>in</small></div><div class="ss snt" id="ss-lx"></div></div>
-    <div class="sc"><div class="sl">Lat. C.G. (Takeoff)</div><div class="sv" id="sv-ly">- <small>in</small></div><div class="ss snt" id="ss-ly"></div></div>
+  <!-- Limit bar -->
+  <div class="lbar lnt" id="lbar">Enter weights above to calculate C.G.</div>
+
+  <!-- New results block: ZF → fuel added → Takeoff weight + CG -->
+  <div class="mob-results" id="mob-results" style="display:none">
+    <!-- Row 1: Zero fuel weight -->
+    <div class="mob-res-row">
+      <div class="mob-res-item">
+        <div class="mob-res-lbl">Zero fuel weight</div>
+        <div class="mob-res-val" id="mob-zfw">—</div>
+      </div>
+      <div class="mob-res-item">
+        <div class="mob-res-lbl">ZF Long. C.G.</div>
+        <div class="mob-res-val" id="mob-zfx">—</div>
+        <div class="mob-res-badge" id="mob-badge-zx"></div>
+      </div>
+      <div class="mob-res-item">
+        <div class="mob-res-lbl">ZF Lat. C.G.</div>
+        <div class="mob-res-val" id="mob-zfy">—</div>
+        <div class="mob-res-badge" id="mob-badge-zy"></div>
+      </div>
+    </div>
+    <!-- Arrow + fuel added -->
+    <div class="mob-res-fuel-row" id="mob-fuel-row">
+      <div class="mob-res-arrow">+</div>
+      <div class="mob-res-fuel-lbl">Fuel added</div>
+      <div class="mob-res-fuel-val" id="mob-fuel-lb">—</div>
+    </div>
+    <!-- Divider -->
+    <div class="mob-res-divider"></div>
+    <!-- Row 2: Takeoff weight + Takeoff CG side by side -->
+    <div class="mob-res-row mob-res-takeoff">
+      <div class="mob-res-item">
+        <div class="mob-res-lbl">Takeoff weight</div>
+        <div class="mob-res-val mob-res-big" id="mob-tw">—</div>
+      </div>
+      <div class="mob-res-item">
+        <div class="mob-res-lbl">Long. C.G.</div>
+        <div class="mob-res-val mob-res-big" id="mob-tx">—</div>
+        <div class="mob-res-badge" id="mob-badge-x"></div>
+      </div>
+      <div class="mob-res-item">
+        <div class="mob-res-lbl">Lat. C.G.</div>
+        <div class="mob-res-val mob-res-big" id="mob-ty">—</div>
+        <div class="mob-res-badge" id="mob-badge-y"></div>
+      </div>
+    </div>
   </div>
   <div class="sec" style="margin-top:16px">C.G. Envelopes - POH Section 2</div>
   <div class="cgrid">
-    <div class="ccard"><div class="chdr"><span class="ctitle">Longitudinal C.G. Envelope</span><span class="cst cnt" id="lst">-</span></div><div class="cbody"><canvas id="lc" height="240"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div></div>
-    <div class="ccard"><div class="chdr"><span class="ctitle">Lateral C.G. Envelope</span><span class="cst cnt" id="rst">-</span></div><div class="cbody"><canvas id="rc" height="240"></canvas><div class="cleg"><span><span class="ld" style="background:#007a38"></span>Takeoff CG</span><span><span class="ld ldsq" style="background:#1a7fe8"></span>Zero Fuel CG</span></div></div></div>
+    <div class="ccard"><div class="chdr"><span class="ctitle">Longitudinal C.G. Envelope</span><span class="cst cnt" id="lst">-</span></div><div class="cbody"><canvas id="lc" height="240"></canvas><div class="cleg"><span><span class="ld" style="background:var(--teal)"></span>Takeoff C.G.</span><span><span class="ld ldsq" style="background:#60a5fa"></span>Zero Fuel C.G.</span></div></div></div>
+    <div class="ccard"><div class="chdr"><span class="ctitle">Lateral C.G. Envelope</span><span class="cst cnt" id="rst">-</span></div><div class="cbody"><canvas id="rc" height="240"></canvas><div class="cleg"><span><span class="ld" style="background:var(--teal)"></span>Takeoff C.G.</span><span><span class="ld ldsq" style="background:#60a5fa"></span>Zero Fuel C.G.</span></div></div></div>
   </div>
   <div class="foot">Moment = Weight &times; Arm &nbsp;&middot;&nbsp; C.G. = &Sigma; Moment &divide; &Sigma; Weight &nbsp;&middot;&nbsp; Limits: 1,543 lb &nbsp;|&nbsp; Long. 75.4&ndash;83.5 in &nbsp;|&nbsp; Lat. &plusmn;3.1 in<br><em>For planning reference only &mdash; always verify with current POH and aircraft W&amp;B report before flight</em></div>
 </div>
@@ -861,7 +1239,7 @@ function recalc(){
   var tw=0,tlm=0,tym=0,zw=0,zlm=0,zym=0,any=false;
   for(var i=0;i<10;i++){
     var raw=gv('w'+i);
-    if(raw===null){g('lm'+i).textContent='-';g('ym'+i).textContent='-';var fwEl=g('fw'+i);if(fwEl)fwEl.textContent='-';
+    if(raw===null){g('lm'+i).innerHTML='<span class="mom-unit">—</span>';g('ym'+i).innerHTML='<span class="mom-unit">—</span>';var fwEl=g('fw'+i);if(fwEl)fwEl.textContent='-';
       continue;}
     any=true;
     // Fuel rows: user enters gallons, convert to lb (x6)
@@ -874,8 +1252,8 @@ function recalc(){
     var lmv=w*xa,ymv=w*ya;
     tw+=w;tlm+=lmv;tym+=ymv;
     if(FUEL.indexOf(i)<0){zw+=w;zlm+=lmv;zym+=ymv;}
-    g('lm'+i).textContent=lmv.toFixed(1);
-    g('ym'+i).textContent=ymv.toFixed(1);
+    g('lm'+i).innerHTML=lmv.toFixed(1)+'<span class="mom-unit">in·lb</span>';
+    g('ym'+i).innerHTML=ymv.toFixed(1)+'<span class="mom-unit">in·lb</span>';
     // Show calculated weight and status for fuel rows
     if(FUEL.indexOf(i)>=0){
       var wEl=g('fw'+i);
@@ -885,11 +1263,11 @@ function recalc(){
   var to_x=(tw&&!isNaN(tlm))?tlm/tw:null,to_y=(tw&&!isNaN(tym))?tym/tw:null;
   var zf_x=zw?zlm/zw:null,zf_y=zw?zym/zw:null;
   if(!any){
-    g('totblock').style.display='none';g('sgrid').style.display='none';
+    g('totblock').style.display='none';g('sgrid').style.display='none';var mrEl=g('mob-results');if(mrEl)mrEl.style.display='none';
     g('lbar').className='lbar lnt';g('lbar').textContent='Enter weights above to calculate C.G.';
-    setSt('lst','-','cnt');setSt('rst','-','cnt');document.querySelectorAll('.over-weight').forEach(function(el){el.classList.remove('over-weight');});var wtchip=g('wt-chip');if(wtchip)wtchip.style.display='none';g('sgrid').style.display='none';g('totblock').style.display='none';redraw();return;
+    setSt('lst','-','cnt');setSt('rst','-','cnt');document.querySelectorAll('.over-weight').forEach(function(el){el.classList.remove('over-weight');});var wtchip=g('wt-chip');if(wtchip)wtchip.style.display='none';g('sgrid').style.display='none';g('totblock').style.display='none';redraw();if(isDesktop)dtUpdate();return;
   }
-  g('totblock').style.display='';
+  // totblock stays hidden (IDs used by dtUpdate only)
   g('t-zw').textContent=fmt(zw,1)+' lb';g('t-zx').textContent=fmt(zf_x,3)+' in';g('t-zy').textContent=fmt(zf_y,3)+' in';
   g('t-tw').textContent=fmt(tw,1)+' lb';g('t-tx').textContent=fmt(to_x,3)+' in';g('t-ty').textContent=fmt(to_y,3)+' in';
   var wOk=tw<=1543,inP=to_x!==null&&inPoly(to_x,tw),yOk=to_y!==null&&to_y>=-3.1&&to_y<=3.1;
@@ -921,10 +1299,39 @@ function recalc(){
       if(frontInp&&frontBagW===null||frontBagW<=11)frontInp.classList.remove('over-weight');
     }
   }
-  g('sgrid').style.display='';
+  // sgrid stays hidden (IDs used by dtUpdate only)
   sCard('sv-zw','ss-zw',fmt(zw,1),'lb','Fuel: '+fmt(tw-zw,1)+' lb',null,null);
   sCard('sv-lx','ss-lx',fmt(to_x,3),'in','Long. C.G.: 75.4-83.5 in',inP?'ok':'wn',inP?'✓ In limits':'✗ Out of limits');
   sCard('sv-ly','ss-ly',fmt(to_y,3),'in','Lat. C.G.: +/-3.1 in',yOk?'ok':'wn',yOk?'✓ In limits':'✗ Out of limits');
+  // Update mobile results block: ZF → fuel → Takeoff weight + CG
+  (function(){
+    var mr=g('mob-results');if(!mr)return;
+    mr.style.display='';
+    // Zero fuel row
+    var mzfw=g('mob-zfw'),mzfx=g('mob-zfx'),mzfy=g('mob-zfy');
+    if(mzfw)mzfw.textContent=fmt(zw,1)+' lb';
+    if(mzfx)mzfx.textContent=zf_x!==null?fmt(zf_x,3)+' in':'—';
+    if(mzfy)mzfy.textContent=zf_y!==null?fmt(zf_y,3)+' in':'—';
+    var mbzx=g('mob-badge-zx'),mbzy=g('mob-badge-zy');
+    if(mbzx){mbzx.className='mob-res-badge '+(zfInP?'ok':'warn');mbzx.textContent=zfInP?'\u2713 in limits':'\u2717 out of limits';}
+    if(mbzy){mbzy.className='mob-res-badge '+(zfYok?'ok':'warn');mbzy.textContent=zfYok?'\u2713 in limits':'\u2717 out of limits';}
+    // Fuel added row
+    var fuelAdded=tw-zw;
+    var mfl=g('mob-fuel-lb'),mfr=g('mob-fuel-row');
+    if(mfl)mfl.textContent=fuelAdded>0?'+'+fmt(fuelAdded,1)+' lb':'0 lb';
+    if(mfr)mfr.style.display=fuelAdded>0?'':'none';
+    // Takeoff row
+    var mtw=g('mob-tw'),mtx=g('mob-tx'),mty=g('mob-ty');
+    var mbx=g('mob-badge-x'),mby=g('mob-badge-y');
+    if(mtw)mtw.textContent=fmt(tw,1)+' lb';
+    if(mtx)mtx.textContent=to_x!==null?fmt(to_x,3)+' in':'—';
+    if(mty)mty.textContent=to_y!==null?fmt(to_y,3)+' in':'—';
+    if(mbx){mbx.className='mob-res-badge '+(inP?'ok':'warn');mbx.textContent=inP?'✓ in limits':'✗ out of limits';}
+    if(mby){mby.className='mob-res-badge '+(yOk?'ok':'warn');mby.textContent=yOk?'✓ in limits':'✗ out of limits';}
+    // Highlight takeoff items if out of limits
+    var twEl2=g('mob-tw')&&g('mob-tw').parentElement;
+    if(twEl2)twEl2.style.borderColor=wOk?'':'var(--red)';
+  })();
   // ZF limit checks
   var zfWok=zw<=1543,zfInP=zf_x!==null&&inPoly(zf_x,zw),zfYok=zf_y!==null&&zf_y>=-3.1&&zf_y<=3.1;
   var hasFuel=FUEL.some(function(fi){return gv('w'+fi)!==null;});
@@ -1019,7 +1426,7 @@ function recalc(){
         stEl.innerHTML='<span style="color:var(--red);font-weight:700">&#10007; '+entGal+' gal exceeds band max of '+bandMax+' gal</span>';
         if(capEl)capEl.innerHTML='';
       } else if(belowMin){
-        stEl.innerHTML='<span style="color:var(--amber,#d97706);font-weight:700">&#9888; '+entGal+' gal is below this band range</span>';
+        stEl.innerHTML='<span style="color:#d97706;font-weight:700">&#9888; '+entGal+' gal is below this band range</span>';
         if(capEl)capEl.innerHTML='Enter '+bandMin+' to '+bandMax+' gal for this band';
       } else {
         // Valid entry — check if at band max or within band
@@ -1038,7 +1445,7 @@ function recalc(){
               var limitMsg=safe2.reason==='cg'
                 ?'⚠ Long. C.G. limit — no more fuel without exceeding envelope'
                 :'⚠ At max gross weight — no more fuel';
-              capEl.innerHTML='<span style="color:var(--amber,#d97706)">'+limitMsg+'</span>';
+              capEl.innerHTML='<span style="color:#d97706">'+limitMsg+'</span>';
             } else {
               capEl.innerHTML='Can add: '+galMore+' more gal / '+lbMore+' lb'+reasonNote2;
             }
@@ -1059,8 +1466,8 @@ function recalc(){
     else if(rem<50){chip.textContent='+'+Math.round(rem)+' lb';chip.className='wt-chip-warn';}
     else{chip.textContent='+'+Math.round(rem)+' lb';chip.className='wt-chip-ok';}
   })();
-}
   if(isDesktop)dtUpdate();
+}
 function setSt(id,t,c){var e=g(id);e.textContent=t;e.className='cst '+c;}
 
 function sCard(v,s2,val,unit,hint,type,status){
@@ -1116,6 +1523,14 @@ function wireDesktop(){
   // Show desktop layout, hide nothing (mobile .cards already display:none via CSS)
   var dtl=g('dt-layout');
   if(dtl)dtl.style.display='';
+  dtUpdateAcftChip();
+  // Keyboard support for aircraft chip expand
+  var summary=g('dt-acft-summary');
+  if(summary){
+    summary.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();dtToggleAcftExpand();}
+    });
+  }
 
   // Sync dt-inputs → mobile inputs on each input event
   var dtPairs=[
@@ -1144,6 +1559,18 @@ function wireDesktop(){
     dtEl.addEventListener('focus',function(){setTimeout(function(){dtEl.select();},10);});
   });
 
+  // Row focus highlight: when any dt-inp gets focus, highlight its table row
+  document.querySelectorAll('.dt-inp').forEach(function(inp){
+    inp.addEventListener('focus',function(){
+      var tr=inp.closest('tr');
+      if(tr)tr.classList.add('row-focus');
+    });
+    inp.addEventListener('blur',function(){
+      var tr=inp.closest('tr');
+      if(tr)tr.classList.remove('row-focus');
+    });
+  });
+
   // Fuel clear: when a dt-fuel input is filled, clear the other two dt-fuel inputs
   var dtFuels=['dt-w7','dt-w8','dt-w9'];
   dtFuels.forEach(function(id){
@@ -1162,6 +1589,7 @@ function wireDesktop(){
 // Mirror recalc outputs to desktop display elements
 function dtUpdate(){
   if(!isDesktop)return;
+  dtUpdateSectionCounts();
   var pairs=[
     ['lm0','dt-lm0'],['ym0','dt-ym0'],
     ['lm1','dt-lm1'],['ym1','dt-ym1'],
@@ -1218,10 +1646,14 @@ function dtUpdate(){
   if(resultCard){
     resultCard.style.display=sgridVisible?'':'none';
     if(sgridVisible){
-      ['sv-tw','sv-lx','sv-ly','sv-zw'].forEach(function(k){
+      // Mirror CG stat cards (sv-zw, sv-lx, sv-ly exist in mobile sgrid)
+  ['sv-zw','sv-lx','sv-ly'].forEach(function(k){
         var src=g(k),dst=g('dt-'+k);
         if(src&&dst)dst.innerHTML=src.innerHTML;
       });
+      // Takeoff weight comes from totblock t-tw (sv-tw doesn't exist)
+      var tTw=g('t-tw'),dtSvTw=g('dt-sv-tw');
+      if(tTw&&dtSvTw)dtSvTw.textContent=tTw.textContent;
       ['ss-lx','ss-ly'].forEach(function(k){
         var src=g(k),dst=g('dt-'+k);
         if(src&&dst){
@@ -1261,10 +1693,143 @@ function dtUpdate(){
     });
   });
 
-  // Draw desktop charts (separate canvases, same data)
+  // Draw desktop charts
   var dtLc=g('dt-lc'),dtRc=g('dt-rc');
   if(dtLc)drawLong(ST.to_x,ST.to_w,ST.zf_x,ST.zf_w,dtLc,200);
   if(dtRc)drawLat(ST.to_x,ST.to_y,ST.zf_x,ST.zf_y,dtRc,160);
+
+  // Change 3: update live totals + zero-fuel rows
+  var liveRow=g('dt-live-row');
+  var zfRow=g('dt-zf-row');
+  var totVisible=g('totblock')&&g('totblock').style.display!=='none';
+  if(liveRow){
+    liveRow.style.display=totVisible?'':'none';
+    if(zfRow)zfRow.style.display=totVisible?'':'none';
+    if(totVisible){
+      var twEl=g('t-tw'),txEl=g('t-tx'),tyEl=g('t-ty');
+      var zwEl=g('t-zw'),zxEl=g('t-zx');
+      var mobLbar2=g('lbar');
+      var isOk2=mobLbar2&&mobLbar2.classList.contains('lok');
+      var isWarn2=mobLbar2&&mobLbar2.classList.contains('lwn');
+      var liveOk=isOk2?'ok':isWarn2?'warn':'';
+      var badge=liveOk?('<span class="dt-live-badge '+liveOk+'">'+(isOk2?'✓':'✗')+'</span>'):'';
+      var ltw=g('dt-live-tw'),ltx=g('dt-live-tx'),lty=g('dt-live-ty');
+      if(ltw&&twEl)ltw.textContent=twEl.textContent;
+      if(ltx&&txEl)ltx.innerHTML=txEl.textContent+badge;
+      if(lty&&tyEl)lty.innerHTML=tyEl.textContent+badge;
+      // ZF row
+      var lzw=g('dt-live-zw'),lzx=g('dt-live-zx'),lzy=g('dt-live-zy');
+      if(lzw&&zwEl)lzw.textContent=zwEl.textContent;
+      if(lzx&&zxEl)lzx.innerHTML=zxEl.textContent+badge;
+      if(lzy){lzy.innerHTML='—';}
+    }
+  }
+
+  // Change 4: update merged panel card
+  dtUpdateMergedPanel();
+}
+
+function dtUpdateMergedPanel(){
+  var card=g('dt-merged-card');
+  var icon=g('dt-merged-icon');
+  var titleEl=g('dt-merged-title-text');
+  if(!card)return;
+  // Derive state from mobile mob-results visibility (same source of truth)
+  var mobRes=g('mob-results');
+  var hasData=mobRes&&mobRes.style.display!=='none';
+  var mobLbar=g('lbar');
+  var isOk=mobLbar&&mobLbar.classList.contains('lok');
+  var isWarn=mobLbar&&mobLbar.classList.contains('lwn');
+
+  // ── Card header state ──────────────────────────────────────────
+  if(!hasData){
+    card.className='dt-merged-card neutral';
+    if(icon){icon.className='dt-merged-icon neutral';icon.textContent='—';}
+    if(titleEl)titleEl.textContent='Enter weights to calculate';
+  } else if(isOk){
+    card.className='dt-merged-card ok';
+    if(icon){icon.className='dt-merged-icon ok';icon.innerHTML='<svg width="10" height="8" viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+    if(titleEl)titleEl.textContent='All limits satisfied';
+  } else {
+    card.className='dt-merged-card warn';
+    if(icon){icon.className='dt-merged-icon warn';icon.textContent='✗';}
+    if(titleEl)titleEl.textContent='Limit exceeded';
+  }
+
+  if(!hasData)return;
+
+  // ── Helper: set badge ──────────────────────────────────────────
+  function setBadge(el,pass){
+    if(!el)return;
+    el.style.display='';
+    el.className='dt-merged-badge '+(pass?'ok':'warn');
+    el.textContent=pass?'✓ in limits':'✗ out';
+  }
+
+  // ── Zero fuel values ───────────────────────────────────────────
+  var zwSrc=g('t-zw'),zxSrc=g('t-zx'),zySrc=g('t-zy');
+  var zwDst=g('dt-sv-zw'),zxDst=g('dt-sv-zx'),zyDst=g('dt-sv-zy');
+  if(zwSrc&&zwDst)zwDst.textContent=zwSrc.textContent;
+  if(zxSrc&&zxDst)zxDst.textContent=zxSrc.textContent;
+  if(zySrc&&zyDst)zyDst.textContent=zySrc.textContent;
+
+  // ZF CG badges — read from mobile badge classes
+  var mobBzx=g('mob-badge-zx'),mobBzy=g('mob-badge-zy');
+  setBadge(g('dt-badge-zx'), mobBzx&&mobBzx.classList.contains('ok'));
+  setBadge(g('dt-badge-zy'), mobBzy&&mobBzy.classList.contains('ok'));
+
+  // ── Fuel added bridge ──────────────────────────────────────────
+  var fuelRow=g('dt-fuel-added-row'),fuelVal=g('dt-fuel-added-val');
+  var mobFuelLb=g('mob-fuel-lb');
+  var mobFuelRow=g('mob-fuel-row');
+  if(fuelRow)fuelRow.style.display=(mobFuelRow&&mobFuelRow.style.display!=='none')?'':'none';
+  if(fuelVal&&mobFuelLb)fuelVal.textContent=mobFuelLb.textContent;
+
+  // ── Takeoff values ─────────────────────────────────────────────
+  var twSrc=g('t-tw'),txSrc=g('t-tx'),tySrc=g('t-ty');
+  var twDst=g('dt-sv-tw'),txDst=g('dt-sv-lx'),tyDst=g('dt-sv-ly');
+  if(twSrc&&twDst)twDst.textContent=twSrc.textContent;
+  if(txSrc&&txDst)txDst.textContent=txSrc.textContent;
+  if(tySrc&&tyDst)tyDst.textContent=tySrc.textContent;
+
+  // Takeoff CG badges — read from mobile badge classes
+  var mobBx=g('mob-badge-x'),mobBy=g('mob-badge-y');
+  setBadge(g('dt-badge-lx'), mobBx&&mobBx.classList.contains('ok'));
+  setBadge(g('dt-badge-ly'), mobBy&&mobBy.classList.contains('ok'));
+
+  // ── Capacity chip ──────────────────────────────────────────────
+  var capChip=g('dt-cap-chip'),wtChip=g('wt-chip');
+  if(capChip&&wtChip){
+    var rem=wtChip.textContent.trim();
+    capChip.style.display=rem?'':'none';
+    capChip.className='dt-cap-chip'+(wtChip.classList.contains('wt-chip-over')?' warn':'');
+    capChip.textContent=rem+' weight capacity';
+  }
+}
+
+// ── Desktop door toggle ───────────────────────────────────────────────────────
+function dtSetDoor(side,state){
+  var prefix=side==='r'?'r':'l';
+  var dtOnBtn=g('dt-'+prefix+'d-on'), dtOffBtn=g('dt-'+prefix+'d-off');
+  var dtInp=g('dt-w'+(side==='r'?'3':'4'));
+  // Mirror to mobile setDoor
+  setDoor(side,state);
+  // Update desktop button states
+  if(dtOnBtn&&dtOffBtn){
+    if(state==='on'){
+      dtOnBtn.className='dt-door-btn active on';
+      dtOffBtn.className='dt-door-btn off';
+    } else {
+      dtOffBtn.className='dt-door-btn active off';
+      dtOnBtn.className='dt-door-btn on';
+    }
+  }
+  // Sync desktop input from mobile input after setDoor runs
+  setTimeout(function(){
+    var mobInp=g('w'+(side==='r'?'3':'4'));
+    if(mobInp&&dtInp)dtInp.value=mobInp.value;
+    dtUpdate();
+  },10);
 }
 
 // ── Aircraft presets (localStorage) ────────────────────────────────────────
@@ -1311,12 +1876,19 @@ function loadAcft(){
   var editBtn=g('acft-edit-btn');
   if(!tail){g('acft-vals').style.display='none';if(editBtn)editBtn.style.display='none';return;}
   if(editBtn)editBtn.style.display='';
+  var changeBtn=g('dt-acft-change-btn');
+  if(changeBtn)changeBtn.style.display='';
   var saved=getSavedAircraft();
   var ac=saved[tail];if(!ac)return;
   var wEl=g('w0'),xaEl=g('xa0'),yaEl=g('ya0');
   if(wEl){wEl.value=ac.w||'';if(wEl.value)wEl.dispatchEvent(new Event('input'));}
   if(xaEl){xaEl.value=ac.xa||'';if(xaEl.value)xaEl.dispatchEvent(new Event('input'));}
   if(yaEl){yaEl.value=ac.ya||'';if(yaEl.value)yaEl.dispatchEvent(new Event('input'));}
+  // Mirror to desktop inputs
+  var dtW=g('dt-w0'),dtXa=g('dt-xa0'),dtYa=g('dt-ya0');
+  if(dtW)dtW.value=ac.w||'';
+  if(dtXa)dtXa.value=ac.xa||'';
+  if(dtYa)dtYa.value=ac.ya||'';
   var tailInp=g('tail');if(tailInp)tailInp.value=tail;
   var lm=(parseFloat(ac.w)||0)*(parseFloat(ac.xa)||0);
   var ym=(parseFloat(ac.w)||0)*(parseFloat(ac.ya)||0);
@@ -1326,7 +1898,157 @@ function loadAcft(){
   g('av-ya').textContent=(ac.ya||'—')+' in';
   g('av-ym').textContent=ym.toFixed(1)+' in·lb';
   g('acft-vals').style.display='';
+  // Update desktop aircraft chip
+  dtUpdateAcftChip();
   recalc();
+}
+
+function dtUpdateSectionCounts(){
+  // Section 1: occupants filled count
+  var occFilled=[g('dt-w1'),g('dt-w2')].filter(function(e){return e&&e.value.trim()!==''}).length;
+  var occEl=g('dt-sec-occ');
+  if(occEl)occEl.textContent=occFilled+' of 2 filled';
+  // Baggage
+  var bagMain=g('dt-w5'),bagFront=g('dt-w6');
+  var bagEl=g('dt-sec-bag');
+  if(bagEl){
+    var parts=[];
+    if(bagMain&&bagMain.value.trim()!=='')parts.push('main '+bagMain.value+' lb');
+    if(bagFront&&bagFront.value.trim()!=='')parts.push('front '+bagFront.value+' lb');
+    bagEl.textContent=parts.join(' · ');
+  }
+  // Fuel
+  var fuelEl=g('dt-sec-fuel');
+  if(fuelEl){
+    var bandNames=['','','','','','','','0–13 gal','13–40 gal','40–45 gal'];
+    var fuelBands=[7,8,9].filter(function(fi){var e=g('dt-w'+fi);return e&&e.value.trim()!='';});
+    if(fuelBands.length>0){
+      var fi=fuelBands[0];var e=g('dt-w'+fi);
+      fuelEl.textContent=e.value+' gal · '+bandNames[fi];
+    } else {
+      fuelEl.textContent='enter total gal in matching band';
+    }
+  }
+  // Doors
+  var doorEl=g('dt-sec-doors');
+  if(doorEl){
+    var rOn=g('dt-rd-on')&&g('dt-rd-on').classList.contains('active');
+    var lOn=g('dt-ld-on')&&g('dt-ld-on').classList.contains('active');
+    if(rOn&&lOn)doorEl.textContent='both on';
+    else if(!rOn&&!lOn)doorEl.textContent='both removed';
+    else doorEl.textContent=(rOn?'R on':'R off')+' · '+(lOn?'L on':'L off');
+  }
+}
+
+function dtToggleAcftExpand(){
+  var expand=g('dt-acft-expand');
+  var chevron=g('dt-acft-chevron');
+  if(!expand)return;
+  var isOpen=expand.classList.contains('open');
+  expand.classList.toggle('open');
+  expand.style.display=isOpen?'none':'block';
+  if(chevron){
+    chevron.classList.toggle('open');
+    chevron.textContent=isOpen?'▼ Show math':'▲ Hide math';
+  }
+}
+
+function dtToggleAcftPicker(e){
+  if(e)e.stopPropagation();
+  var picker=g('dt-acft-picker');
+  if(!picker)return;
+  var isOpen=picker.style.display!=='none';
+  if(!isOpen){
+    dtBuildAcftPicker();
+    picker.style.display='block';
+    // Close when clicking outside
+    setTimeout(function(){
+      document.addEventListener('click',dtClosePicker,{once:true});
+    },0);
+  } else {
+    picker.style.display='none';
+  }
+}
+
+function dtClosePicker(){
+  var picker=g('dt-acft-picker');
+  if(picker)picker.style.display='none';
+}
+
+function dtBuildAcftPicker(){
+  var list=g('dt-acft-picker-list');
+  if(!list)return;
+  var saved=getSavedAircraft();
+  var keys=Object.keys(saved);
+  var current=g('acft-select')?g('acft-select').value:'';
+  list.innerHTML='';
+  if(keys.length===0){
+    list.innerHTML='<div class="dt-acft-picker-item empty">No saved aircraft</div>';
+    return;
+  }
+  keys.forEach(function(tail){
+    var ac=saved[tail];
+    var div=document.createElement('div');
+    div.className='dt-acft-picker-item'+(tail===current?' active':'');
+    div.innerHTML='<div class="dt-acft-picker-dot'+(tail===current?' active':'')+'"></div>'+
+      '<div><div style="font-size:12px;font-weight:600">'+tail+'</div>'+
+      '<div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:400">'+
+      (ac.w||'—')+' lb · Long '+( ac.xa||'—')+' · Lat '+(ac.ya||'—')+'</div></div>';
+    div.onclick=function(){
+      var sel=g('acft-select');
+      if(sel){sel.value=tail;loadAcft();}
+      dtClosePicker();
+    };
+    list.appendChild(div);
+  });
+}
+
+function dtUpdateAcftChip(){
+  if(!isDesktop)return;
+  var tail=g('acft-select')?g('acft-select').value:'';
+  var tailEl=g('dt-acft-tail');
+  var ewChip=g('dt-chip-ew');
+  var xaChip=g('dt-chip-xa');
+  var yaChip=g('dt-chip-ya');
+  var editBtn=g('dt-acft-edit-btn');
+  var chevron=g('dt-acft-chevron');
+  var expand=g('dt-acft-expand');
+  if(!tail){
+    if(tailEl)tailEl.textContent='No aircraft selected';
+    if(ewChip)ewChip.style.display='none';
+    if(xaChip)xaChip.style.display='none';
+    if(yaChip)yaChip.style.display='none';
+    if(editBtn)editBtn.style.display='none';
+    var changeBtn2=g('dt-acft-change-btn');
+    if(changeBtn2)changeBtn2.style.display='none';
+    if(chevron)chevron.style.display='none';
+    if(expand){expand.style.display='none';expand.classList.remove('open');}
+    return;
+  }
+  var saved=getSavedAircraft();
+  var ac=saved[tail];if(!ac)return;
+  if(tailEl)tailEl.textContent=tail;
+  if(ewChip){ewChip.style.display='';ewChip.textContent='EW '+ac.w+' lb';}
+  if(xaChip){xaChip.style.display='';xaChip.textContent='Long. '+ac.xa+' in';}
+  if(yaChip){yaChip.style.display='';yaChip.textContent='Lat. '+ac.ya+' in';}
+  if(editBtn)editBtn.style.display='';
+  var changeBtn=g('dt-acft-change-btn');
+  if(changeBtn)changeBtn.style.display='';
+  if(chevron){chevron.style.display='';if(!chevron.textContent.trim())chevron.textContent='▼ Show math';}
+  // Update math table values
+  var w=parseFloat(ac.w)||0;
+  var xa=parseFloat(ac.xa)||0;
+  var ya=parseFloat(ac.ya)||0;
+  var lm=w*xa;
+  var ym=w*ya;
+  function fmt2(v,d){return isNaN(v)?'—':(+v).toFixed(d);}
+  var mEw=g('dt-math-ew'),mXa=g('dt-math-xa'),mLm=g('dt-math-lm');
+  var mYa=g('dt-math-ya'),mYm=g('dt-math-ym');
+  if(mEw)mEw.textContent=fmt2(w,1)+' lb';
+  if(mXa)mXa.textContent=fmt2(xa,2)+' in';
+  if(mLm)mLm.textContent=lm.toFixed(1)+' in·lb';
+  if(mYa)mYa.textContent=fmt2(ya,4)+' in';
+  if(mYm)mYm.textContent=ym.toFixed(1)+' in·lb';
 }
 
 function openAcftModal(isEdit){
@@ -1411,12 +2133,24 @@ function applyPreset(type){
     setDoor('r','off');setDoor('l','off');
     showToast('Both doors removed (-6.8 lb each)');
   }
+  // Sync mobile inputs back to desktop inputs
+  if(isDesktop){
+    var mobToDt=[['w0','dt-w0'],['w1','dt-w1'],['w2','dt-w2'],
+                 ['w3','dt-w3'],['w4','dt-w4'],['w5','dt-w5'],
+                 ['w6','dt-w6'],['w7','dt-w7'],['w8','dt-w8'],['w9','dt-w9'],
+                 ['xa0','dt-xa0'],['ya0','dt-ya0']];
+    mobToDt.forEach(function(p){
+      var mob=g(p[0]),dt=g(p[1]);
+      if(mob&&dt)dt.value=mob.value;
+    });
+  }
   recalc();
 }
 
 function setDoor(side, state){
   var prefix=side==='r'?'r':'l';
   var inputId=side==='r'?'w3':'w4';
+  var dtInputId='dt-w'+(side==='r'?'3':'4');
   var onBtn=g(prefix+'d-on'), offBtn=g(prefix+'d-off'), inp=g(inputId);
   if(!onBtn||!offBtn||!inp) return;
   if(state==='on'){
@@ -1429,6 +2163,12 @@ function setDoor(side, state){
     inp.value='-6.8';
   }
   inp.dispatchEvent(new Event('input'));
+  // Mirror value and button state to desktop
+  var dtInp=g(dtInputId);
+  if(dtInp)dtInp.value=inp.value;
+  var dtOn=g('dt-'+prefix+'d-on'),dtOff=g('dt-'+prefix+'d-off');
+  if(dtOn)dtOn.className='dt-door-btn '+(state==='on'?'active on':'on');
+  if(dtOff)dtOff.className='dt-door-btn '+(state==='off'?'active off':'off');
   recalc();
 }
 
@@ -1479,12 +2219,24 @@ function clearAll(){
   for(var i=0;i<10;i++){var w=g('w'+i);if(w)w.value='';}
   var xa=g('xa0');if(xa)xa.value='';
   var ya=g('ya0');if(ya)ya.value='';
+  // Clear desktop inputs too
+  for(var di=0;di<10;di++){var dw=g('dt-w'+di);if(dw)dw.value='';}
+  var dxa=g('dt-xa0');if(dxa)dxa.value='';
+  var dya=g('dt-ya0');if(dya)dya.value='';
+  // Reset desktop door buttons
+  ['r','l'].forEach(function(side){
+    var on=g('dt-'+side+'d-on'),off=g('dt-'+side+'d-off');
+    if(on){on.className='dt-door-btn active on';}
+    if(off){off.className='dt-door-btn off';}
+  });
   var sel=g('acft-select');if(sel)sel.value='';
   var vals=g('acft-vals');if(vals)vals.style.display='none';
+  if(isDesktop)dtUpdateAcftChip();
   var editBtn=g('acft-edit-btn');if(editBtn)editBtn.style.display='none';
   var tailInp=g('tail');if(tailInp)tailInp.value='';
   var chip=g('wt-chip');if(chip)chip.style.display='none';
   setDoor('r','on');setDoor('l','on');
+  var mr2=g('mob-results');if(mr2)mr2.style.display='none';
   recalc();
 }
 
