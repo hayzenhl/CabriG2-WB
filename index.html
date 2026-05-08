@@ -281,7 +281,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .fuel-note-body{font-size:11px;color:#92400e;line-height:1.6;margin-bottom:7px}
 @media(prefers-color-scheme:dark){.fuel-note-body{color:#fbbf24}}
 .fuel-note-bands{display:flex;gap:5px;flex-wrap:wrap}
-.fnb{font-size:10px;font-weight:600;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:20px;padding:3px 9px;white-space:nowrap}
+.fnb{font-size:10px;font-weight:600;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:20px;padding:3px 9px;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.fnb.active{background:var(--teal)!important;border-color:var(--teal)!important;color:#fff!important}
 @media(prefers-color-scheme:dark){.fnb{background:#451a03;border-color:#78350f;color:#fcd34d}}
 .fuel-note-sub{font-size:10px;color:#a16207;margin-top:6px;line-height:1.5;opacity:.85}
 @media(prefers-color-scheme:dark){.fuel-note-sub{color:#d97706}}
@@ -481,6 +482,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .dt-mom{font-size:11px;font-weight:600;color:var(--text-mid);text-align:right;
     font-variant-numeric:tabular-nums}
   .dt-mom.dim{color:var(--text-muted);font-weight:400}
+  .dt-eq{display:block;font-size:9px;font-weight:400;color:var(--text-muted);
+    letter-spacing:0;margin-bottom:1px;font-variant-numeric:tabular-nums}
+  .dt-eq-result{font-size:12px;font-weight:700}
+  .dt-eq-unit{font-size:9px;font-weight:400;color:var(--text-muted);margin-left:2px}
   .dt-inp{width:72px;height:26px;border:1.5px solid var(--border);border-radius:6px;
     background:var(--surface);color:var(--text);font-size:12px;font-weight:700;
     padding:0 6px;text-align:right;outline:none;font-family:inherit;
@@ -565,11 +570,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .dt-merged-badge.warn{background:var(--red-bg);color:var(--red)}
   /* Fuel added bridge row */
   .dt-merged-fuel-row{display:flex;align-items:center;gap:6px;
-    padding:5px 0 3px;font-size:11px}
-  .dt-merged-fuel-plus{font-size:14px;font-weight:700;color:var(--teal);line-height:1}
-  .dt-merged-fuel-lbl{color:var(--text-muted);font-weight:500}
-  .dt-merged-fuel-val{margin-left:auto;font-weight:700;color:var(--text);
-    font-variant-numeric:tabular-nums}
+    padding:5px 8px;font-size:11px;background:rgba(15,149,128,.06);
+    border-radius:5px;margin:3px 0}
+  .dt-merged-fuel-plus{font-size:13px;font-weight:700;color:var(--teal);line-height:1}
+  .dt-merged-fuel-lbl{color:var(--teal-dark);font-weight:600;font-size:10px}
+  .dt-merged-fuel-val{margin-left:auto;font-weight:700;color:var(--teal-dark);
+    font-variant-numeric:tabular-nums;font-size:10px}
   /* Divider between ZF and Takeoff */
   .dt-merged-divider{height:1.5px;background:linear-gradient(to right,var(--teal),var(--border-light));
     margin:4px 0 6px;border-radius:2px}
@@ -637,26 +643,68 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* ── Print ────────────────────────────────────────────────── */
 @media print{
+  /* ── Colour fidelity ───────────────────────────────── */
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important}
-  .hdr{position:static!important;background:#1a2e4a!important;padding:12px 16px}
-  .hdr h1{color:#fff!important;font-size:14pt}
-  .hdr-sub{color:rgba(255,255,255,.6)!important}
-  .mf input{color:#fff!important;background:rgba(255,255,255,.15)!important;border-color:rgba(255,255,255,.2)!important}
-  .acft-section{background:#243b55!important}
-  .hbtn,.cbtn,.presets,.kp-overlay,.modal-overlay,.acft-edit-btn,.toast,.fuel-note{display:none!important}
-  .main{padding:8px 12px;max-width:100%}
-  .cards{display:block}
-  .card{break-inside:avoid;margin-bottom:4px;border:0.5px solid #ccc!important;box-shadow:none!important}
-  .card-top{padding:5px 10px}
-  .inp{background:#e8f2fd!important;color:#1a56a0!important;border:0.5px solid #1a56a0!important;height:24px;font-size:11px!important;padding:0 6px}
-  .card-moms{padding:4px 10px;background:#f8f9fa!important;border-top:0.5px solid #ddd!important}
+  @page{margin:1.2cm;size:A4 portrait}
+
+  /* ── Always hide — both platforms ─────────────────── */
+  .hbtn,.cbtn,.presets,.kp-overlay,.modal-overlay,
+  .acft-edit-btn,.toast,.fuel-note,.fuel-note-sub,
+  .acft-section,
+  .dt-acft-actions,.dt-acft-picker,.dt-acft-chevron,.dt-acft-expand,
+  .dt-door-wrap,.dt-door-toggle,.door-toggle,.toggle-wrap,
+  .dt-sec-count,.dt-fuel-status,.dt-fuel-cap,
+  .fuel-status,.fuel-cap,
+  .mob-res-badge,
+  .sec{display:none!important}
+
+  /* ── Header ────────────────────────────────────────── */
+  .hdr{position:static!important;background:#1a2e4a!important;padding:10px 14px}
+  .hdr h1{color:#fff!important;font-size:13pt}
+  .hdr-sub{color:rgba(255,255,255,.7)!important}
+  .mf input{color:#fff!important;background:rgba(255,255,255,.12)!important;border-color:rgba(255,255,255,.2)!important}
+
+  /* ── Charts ────────────────────────────────────────── */
   .cgrid{grid-template-columns:1fr 1fr!important;gap:8px}
   .ccard{border:0.5px solid #ccc!important;box-shadow:none!important;break-inside:avoid}
   .chdr{background:#1a2e4a!important;padding:7px 10px}
-  .sgrid{display:none!important}
-  .tot-block,.lbar{break-inside:avoid;box-shadow:none!important}
-  @page{margin:1.2cm;size:A4 portrait}
+
+  /* ── MOBILE PRINT ──────────────────────────────────── */
+  .cards{display:block}
+  .card{break-inside:avoid;margin-bottom:4px;border:0.5px solid #ccc!important;box-shadow:none!important}
+  .card-top{padding:5px 10px}
+  .inp{background:#e8f2fd!important;color:#1a56a0!important;border:0.5px solid #1a56a0!important;height:22px;font-size:11px!important;padding:0 6px}
+  .card-moms{padding:4px 10px;background:#f8f9fa!important;border-top:0.5px solid #ddd!important}
+  .lbar{break-inside:avoid;box-shadow:none!important}
+  .mob-results{display:block!important}
+  .mob-res-item{background:#f8f9fa!important;border:0.5px solid #ddd!important}
+  .mob-res-fuel-row{display:none!important}
+  .dt-acft-bar{display:none!important}
+  .dt-layout{display:none!important}
+
+  /* ── DESKTOP PRINT ─────────────────────────────────── */
+  @media(pointer:fine){
+    .cards{display:none!important}
+    .lbar{display:none!important}
+    .mob-results{display:none!important}
+    .dt-acft-bar{display:flex!important;background:#1a2e4a!important}
+    .dt-layout{display:block!important}
+    .dt-layout>div{grid-template-columns:1fr 280px!important}
+    .dt-table{border-collapse:collapse!important;font-size:9pt}
+    .dt-table td,.dt-table th{border:0.5px solid #ddd!important;padding:3px 6px!important}
+    .dt-inp{background:#e8f2fd!important;color:#1a56a0!important;border:0.5px solid #1a56a0!important;font-size:9pt!important;height:20px!important}
+    .dt-mom{font-size:9pt!important}
+    .dt-eq{font-size:8pt!important}
+    .dt-eq-result{font-size:9pt!important}
+    .dt-section{margin-bottom:6px!important}
+    .dt-section-title{font-size:8pt!important;padding:3px 0!important}
+    .dt-merged-card{box-shadow:none!important;border:0.5px solid #ccc!important;font-size:9pt}
+    .dt-merged-section-lbl{font-size:7pt!important}
+    .dt-merged-row{font-size:9pt!important;padding:2px 0!important}
+    .dt-totbar{display:none!important}
+    .dt-panel{position:static!important}
+  }
 }
 
 /* ── Chart internals ─────────────────────────────────── */
@@ -1104,11 +1152,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     
     <div class="fuel-note">
       <div class="fuel-note-title">Fuel Band Selection</div>
-      <div class="fuel-note-body">Enter your total gallons on board in the matching band.</div>
+      <div class="fuel-note-body">Enter total gallons on board in the matching band — one band only.</div>
       <div class="fuel-note-bands">
-        <span class="fnb">0–13 gal → Band 1</span>
-        <span class="fnb">13–40 gal → Band 2</span>
-        <span class="fnb">40–45 gal → Band 3</span>
+        <span class="fnb" id="fnb-7">0–13 gal</span>
+        <span class="fnb" id="fnb-8">13–40 gal</span>
+        <span class="fnb" id="fnb-9">40–45 gal</span>
       </div>
       <div class="fuel-note-sub">(One band only as the POH arm is pre-averaged for each range. Entering a value clears the other bands.)</div>
     </div>
@@ -1224,10 +1272,11 @@ function recalc(){
       if(id!==keepId){var e=g(id);if(e)e.value='';}
     });
   }
-  var tw=0,tlm=0,tym=0,zw=0,zlm=0,zym=0,any=false;
+  var tw=0,tlm=0,tym=0,zw=0,zlm=0,zym=0,any=false,ewIncluded=false;
   for(var i=0;i<10;i++){
     var raw=gv('w'+i);
-    if(raw===null){g('lm'+i).innerHTML='<span class="mom-unit">—</span>';g('ym'+i).innerHTML='<span class="mom-unit">—</span>';var fwEl=g('fw'+i);if(fwEl)fwEl.textContent='-';
+    if(raw===null){g('lm'+i).innerHTML='<span class="mom-unit">—</span>';g('ym'+i).innerHTML='<span class="mom-unit">—</span>';
+      if(isDesktop){var dtLmN=g('dt-lm'+i),dtYmN=g('dt-ym'+i);if(dtLmN)dtLmN.innerHTML='<span class="dt-mom dim">—</span>';if(dtYmN)dtYmN.innerHTML='<span class="dt-mom dim">—</span>';}var fwEl=g('fw'+i);if(fwEl)fwEl.textContent='-';
       continue;}
     any=true;
     // Fuel rows: user enters gallons, convert to lb (x6)
@@ -1235,6 +1284,7 @@ function recalc(){
     var xa=i===0?gv('xa0'):XCG[i];
     var ya=i===0?gv('ya0'):YCG[i];
     if(i===0&&(xa===null||ya===null))continue;
+    if(i===0)ewIncluded=true;
     // Still accumulate weight even if arm unknown
     if(xa===null||ya===null){tw+=w;if(FUEL.indexOf(i)<0)zw+=w;continue;}
     var lmv=w*xa,ymv=w*ya;
@@ -1242,6 +1292,17 @@ function recalc(){
     if(FUEL.indexOf(i)<0){zw+=w;zlm+=lmv;zym+=ymv;}
     g('lm'+i).innerHTML=lmv.toFixed(1)+'<span class="mom-unit">in·lb</span>';
     g('ym'+i).innerHTML=ymv.toFixed(1)+'<span class="mom-unit">in·lb</span>';
+    // Desktop: equation format "w × arm = result in·lb"
+    if(isDesktop){
+      var wDisp=FUEL.indexOf(i)>=0?raw.toFixed(1)+' gal ×6':w.toFixed(1);
+      var xaDisp=i===0?xa.toFixed(2):XCG[i];
+      var yaDisp=i===0?ya.toFixed(4):YCG[i];
+      var dtLm=g('dt-lm'+i),dtYm=g('dt-ym'+i);
+      if(dtLm)dtLm.innerHTML='<span class="dt-eq">'+wDisp+' × '+xaDisp+'</span>'+
+        '<span class="dt-eq-result">= '+lmv.toFixed(1)+'</span>';
+      if(dtYm)dtYm.innerHTML='<span class="dt-eq">'+wDisp+' × '+yaDisp+'</span>'+
+        '<span class="dt-eq-result">= '+ymv.toFixed(1)+'</span>';
+    }
     // Show calculated weight and status for fuel rows
     if(FUEL.indexOf(i)>=0){
       var wEl=g('fw'+i);
@@ -1301,13 +1362,14 @@ function recalc(){
     if(mzfx)mzfx.textContent=zf_x!==null?fmt(zf_x,3)+' in':'—';
     if(mzfy)mzfy.textContent=zf_y!==null?fmt(zf_y,3)+' in':'—';
     var mbzx=g('mob-badge-zx'),mbzy=g('mob-badge-zy');
-    var zfWeightInRange=zw>=1036;
+    var hasFuelNow=FUEL.some(function(fi){return gv('w'+fi)!==null;});
+    var showZfBadges=ewIncluded&&hasFuelNow;
     if(mbzx){
-      if(!zfWeightInRange){mbzx.className='mob-res-badge';mbzx.style.display='none';}
+      if(!showZfBadges){mbzx.style.display='none';}
       else{mbzx.style.display='';mbzx.className='mob-res-badge '+(zfInP?'ok':'warn');mbzx.textContent=zfInP?'\u2713 in limits':'\u2717 out of limits';}
     }
     if(mbzy){
-      if(!zfWeightInRange){mbzy.className='mob-res-badge';mbzy.style.display='none';}
+      if(!showZfBadges){mbzy.style.display='none';}
       else{mbzy.style.display='';mbzy.className='mob-res-badge '+(zfYok?'ok':'warn');mbzy.textContent=zfYok?'\u2713 in limits':'\u2717 out of limits';}
     }
     // Fuel added row
@@ -1328,11 +1390,10 @@ function recalc(){
     if(twEl2)twEl2.style.borderColor=wOk?'':'var(--red)';
   })();
   // ZF limit checks
-  var zfWok=zw<=1543,zfInP=zf_x!==null&&inPoly(zf_x,zw),zfYok=zf_y!==null&&zf_y>=-3.1&&zf_y<=3.1;
+  var zfWok=zw<=1543,zfInP=zf_x!==null&&zf_x>=75.4&&zf_x<=83.5,zfYok=zf_y!==null&&zf_y>=-3.1&&zf_y<=3.1;
   var hasFuel=FUEL.some(function(fi){return gv('w'+fi)!==null;});
   var all=wOk&&inP&&yOk;
-  var zfInRange=zw>=1036;
-  var allZf=hasFuel?(zfWok&&(!zfInRange||zfInP)&&zfYok):true;
+  var allZf=!ewIncluded||((hasFuel?(zfWok&&zfInP&&zfYok):true));
   // Badge reflects takeoff CG (consistent with stat card display)
   var lstOk=inP;
   var rstOk=yOk;
@@ -1348,7 +1409,7 @@ function recalc(){
     '<div class=lbar-item>Lat. C.G.: '+fmt(to_y,3)+' in &nbsp;'+(yOk?'&#10003;':'&#10007; outside ±3.1 in')+'</div></div>'+
     '<div class=lbar-section><div class=lbar-section-title>Zero Fuel</div>'+
     '<div class=lbar-item>Weight: '+fmt(zw,1)+' lb &nbsp;'+(zfWok?'&#10003;':'&#10007; exceeds 1,543 lb')+'</div>'+
-    '<div class=lbar-item>Long. C.G.: '+fmt(zf_x,3)+' in &nbsp;'+(zfInRange?(zfInP?'&#10003;':'&#10007; outside envelope'):'&#10003; (below envelope range)')+'</div>'+
+    '<div class=lbar-item>Long. C.G.: '+fmt(zf_x,3)+' in &nbsp;'+(zfInP?'&#10003;':'&#10007; outside 75.4–83.5 in')+'</div>'+
     '<div class=lbar-item>Lat. C.G.: '+fmt(zf_y,3)+' in &nbsp;'+(zfYok?'&#10003;':'&#10007; outside ±3.1 in')+'</div></div>';
   // ST for charts
   ST.to_x=to_x;ST.to_w=tw||null;ST.zf_x=zf_x;ST.zf_w=zw||null;ST.to_y=to_y;ST.zf_y=zf_y;
@@ -1390,6 +1451,7 @@ function recalc(){
     if(rawF===null){
       if(fuelInpEl)fuelInpEl.classList.remove('over-weight');
       stEl.innerHTML='Use for '+bandLabel+' gal on board';
+      var pb0=g('fnb-'+fi);if(pb0)pb0.classList.remove('active');
       if(capEl){
         if(!yOk&&tw>0){
           capEl.innerHTML='<span style="color:var(--red)">&#9888; Lat. C.G. out of limits — reduce lateral imbalance first</span>';
@@ -1427,7 +1489,11 @@ function recalc(){
       } else {
         // Valid entry — check if at band max or within band
         var atBandMax=parseFloat(entGal.toFixed(1))>=bandMax;
+        // Highlight active fuel band pill
+        [7,8,9].forEach(function(p){var pb=g('fnb-'+p);if(pb)pb.classList.toggle('active',p===fi);});
         stEl.innerHTML='<span style="color:var(--green);font-weight:600">'+entGal+' gal — in range</span>';
+        // Highlight active pill
+        [7,8,9].forEach(function(p){var pb=g('fnb-'+p);if(pb)pb.classList.toggle('active',p===fi);});
         if(capEl){
           if(!wOk){
             capEl.innerHTML='<span style="color:var(--red)">&#9888; Over max gross weight — reduce total weight</span>';
@@ -1592,16 +1658,7 @@ function dtUpdate(){
   if(!isDesktop)return;
   dtUpdateSectionCounts();
   var pairs=[
-    ['lm0','dt-lm0'],['ym0','dt-ym0'],
-    ['lm1','dt-lm1'],['ym1','dt-ym1'],
-    ['lm2','dt-lm2'],['ym2','dt-ym2'],
-    ['lm3','dt-lm3'],['ym3','dt-ym3'],
-    ['lm4','dt-lm4'],['ym4','dt-ym4'],
-    ['lm5','dt-lm5'],['ym5','dt-ym5'],
-    ['lm6','dt-lm6'],['ym6','dt-ym6'],
-    ['lm7','dt-lm7'],['ym7','dt-ym7'],
-    ['lm8','dt-lm8'],['ym8','dt-ym8'],
-    ['lm9','dt-lm9'],['ym9','dt-ym9'],
+    // dt-lm*/dt-ym* set directly in recalc loop with equation format
     ['fw7','dt-fw7'],['fw8','dt-fw8'],['fw9','dt-fw9'],
   ];
   pairs.forEach(function(p){
@@ -1752,11 +1809,11 @@ function dtUpdateMergedPanel(){
   // ZF CG badges — read from mobile badge classes
   var mobBzx=g('mob-badge-zx'),mobBzy=g('mob-badge-zy');
   // Hide ZF badges when ZF weight is below envelope range
-  var zfBelowRange=mobBzx&&!mobBzx.classList.contains('ok')&&!mobBzx.classList.contains('warn');
-  if(zfBelowRange){
+  var zfBadgeVisible=mobBzx&&mobBzx.style.display!=='none';
+  if(!zfBadgeVisible){
     var bx=g('dt-badge-zx'),by=g('dt-badge-zy');
-    if(bx){bx.style.display='none';}
-    if(by){by.style.display='none';}
+    if(bx)bx.style.display='none';
+    if(by)by.style.display='none';
   } else {
     setBadge(g('dt-badge-zx'), mobBzx&&mobBzx.classList.contains('ok'));
     setBadge(g('dt-badge-zy'), mobBzy&&mobBzy.classList.contains('ok'));
@@ -1766,8 +1823,15 @@ function dtUpdateMergedPanel(){
   var fuelRow=g('dt-fuel-added-row'),fuelVal=g('dt-fuel-added-val');
   var mobFuelLb=g('mob-fuel-lb');
   var mobFuelRow=g('mob-fuel-row');
-  if(fuelRow)fuelRow.style.display=(mobFuelRow&&mobFuelRow.style.display!=='none')?'':'none';
-  if(fuelVal&&mobFuelLb)fuelVal.textContent=mobFuelLb.textContent;
+  var showFuel=mobFuelRow&&mobFuelRow.style.display!=='none';
+  if(fuelRow)fuelRow.style.display=showFuel?'':'none';
+  if(fuelVal&&mobFuelLb&&showFuel){
+    // Parse lb value and show gal too
+    var lbTxt=mobFuelLb.textContent||'';
+    var lbNum=parseFloat(lbTxt.replace('+',''));
+    var galNum=isNaN(lbNum)?'':Math.round(lbNum/6*10)/10;
+    fuelVal.textContent=lbTxt+(galNum?' ('+galNum+' gal)':'');
+  }
 
   // ── Takeoff values ─────────────────────────────────────────────
   var twSrc=g('t-tw'),txSrc=g('t-tx'),tySrc=g('t-ty');
@@ -1933,7 +1997,7 @@ function dtToggleAcftExpand(){
   expand.style.display=isOpen?'none':'block';
   if(chevron){
     chevron.classList.toggle('open');
-    chevron.textContent=isOpen?'▼ Show math':'▲ Hide math';
+    chevron.textContent=isOpen?'\u25bc Show math':'\u25bc Hide math';
   }
 }
 
@@ -2328,7 +2392,7 @@ function drawLat(to_x,to_y,zf_x,zf_y,cvOpt,hOpt){
   ctx.fillStyle=es;ctx.font='8px -apple-system,sans-serif';ctx.textAlign='left';ctx.fillText('+3.1',ex1+3,ey0+8);ctx.fillText('-3.1',ex1+3,ey1-2);
   ctx.fillStyle=d?'rgba(255,255,255,.32)':'rgba(0,0,0,.32)';ctx.font='7px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText('X=78.7',px(78.7),mt+9);
   var R=8;
-  if(zf_x!==null&&zf_y!==null){var x=px(zf_x),y=py(zf_y);ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);ctx.fillStyle='#1a7fe8';ctx.fillRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.strokeStyle='#0a4f9a';ctx.lineWidth=1.3;ctx.strokeRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.restore();}
+  if(zf_x!==null&&zf_y!==null){var x=px(zf_x),y=py(zf_y);ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);ctx.fillStyle='#1a7fe8';ctx.fillRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.strokeStyle='#0a4f9a';ctx.lineWidth=1.3;ctx.strokeRect(-R*.7,-R*.7,R*1.4,R*1.4);ctx.restore();ctx.fillStyle=d?'#93c5fd':'#0a4f9a';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText('ZF',x,y+R+9);}
   if(to_x!==null&&to_y!==null){var x2=px(to_x),y2=py(to_y);ctx.beginPath();ctx.arc(x2,y2,R,0,Math.PI*2);ctx.fillStyle='#007a38';ctx.fill();ctx.strokeStyle='#004d22';ctx.lineWidth=1.3;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('TO',x2,y2);ctx.textBaseline='alphabetic';}
 }
 
