@@ -1364,13 +1364,16 @@ function recalc(){
     var mbzx=g('mob-badge-zx'),mbzy=g('mob-badge-zy');
     var hasFuelNow=FUEL.some(function(fi){return gv('w'+fi)!==null;});
     var showZfBadges=ewIncluded&&hasFuelNow;
+    // Compute ZF CG limits inline — zfInP/zfYok are declared later in recalc
+    var zfInP_b=zf_x!==null&&zf_x>=75.4&&zf_x<=83.5;
+    var zfYok_b=zf_y!==null&&zf_y>=-3.1&&zf_y<=3.1;
     if(mbzx){
       if(!showZfBadges){mbzx.style.display='none';}
-      else{mbzx.style.display='';mbzx.className='mob-res-badge '+(zfInP?'ok':'warn');mbzx.textContent=zfInP?'\u2713 in limits':'\u2717 out of limits';}
+      else{mbzx.style.display='';mbzx.className='mob-res-badge '+(zfInP_b?'ok':'warn');mbzx.textContent=zfInP_b?'\u2713 in limits':'\u2717 out of limits';}
     }
     if(mbzy){
       if(!showZfBadges){mbzy.style.display='none';}
-      else{mbzy.style.display='';mbzy.className='mob-res-badge '+(zfYok?'ok':'warn');mbzy.textContent=zfYok?'\u2713 in limits':'\u2717 out of limits';}
+      else{mbzy.style.display='';mbzy.className='mob-res-badge '+(zfYok_b?'ok':'warn');mbzy.textContent=zfYok_b?'\u2713 in limits':'\u2717 out of limits';}
     }
     // Fuel added row
     var fuelAdded=tw-zw;
@@ -1492,9 +1495,7 @@ function recalc(){
         // Highlight active fuel band pill
         [7,8,9].forEach(function(p){var pb=g('fnb-'+p);if(pb)pb.classList.toggle('active',p===fi);});
         stEl.innerHTML='<span style="color:var(--green);font-weight:600">'+entGal+' gal — in range</span>';
-        // Highlight active pill
-        [7,8,9].forEach(function(p){var pb=g('fnb-'+p);if(pb)pb.classList.toggle('active',p===fi);});
-        if(capEl){
+          if(capEl){
           if(!wOk){
             capEl.innerHTML='<span style="color:var(--red)">&#9888; Over max gross weight — reduce total weight</span>';
           } else if(!yOk){
